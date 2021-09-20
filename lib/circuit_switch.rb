@@ -6,8 +6,6 @@ module CircuitSwitch
   class << self
     def watch_over
       yield
-      raise CalledNotification.new
-    rescue CalledNotification
       Reporter.perform_later
     end
   end
