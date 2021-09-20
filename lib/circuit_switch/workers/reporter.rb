@@ -2,6 +2,8 @@ require 'circuit_switch/notifications'
 
 module CircuitSwitch
   class Reporter < ::ActiveJob::Base
+    delegate :config, to: ::CircuitSwitch
+
     def perform
       caller_path = caller.detect { |path| path.match?(/(#{Rails.root})/) }
       circuit_switch = CircuitSwitch.find_or_initialize_by(caller: caller_path)
@@ -16,7 +18,7 @@ module CircuitSwitch
     private
 
     def report(error)
-      case ::CircuitSwitch.config.report_tool
+      case config.report_tool
       when :bugsnag
         Bugsnag.notify(error)
       else
