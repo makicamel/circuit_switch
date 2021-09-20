@@ -7,10 +7,20 @@ module CircuitSwitch
       circuit_switch = CircuitSwitch.find_or_initialize_by(caller: caller_path)
       if circuit_switch.watching?
         circuit_switch.increment
-        # TODO: Be able to choice report tool
-        Bugsnag.notify(
+        report(
           CalledNotification.new("Watching process is called for #{circuit_switch.report_count}th. Report until for #{circuit_switch.switch_off_count}th.")
         )
+      end
+    end
+
+    private
+
+    def report(error)
+      case ::CircuitSwitch.config.report_tool
+      when :bugsnag
+        Bugsnag.notify(error)
+      else
+        raise ReportToolNotFound
       end
     end
   end
