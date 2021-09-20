@@ -8,7 +8,9 @@ module CircuitSwitch
       if circuit_switch.watching?
         circuit_switch.increment
         # TODO: Be able to choice report tool
-        Bugsnag.notify(CalledNotification.new)
+        Bugsnag.notify(
+          CalledNotification.new("Watching process is called for #{circuit_switch.report_count}th. Report until for #{circuit_switch.switch_off_count}th.")
+        )
       end
     end
   end
