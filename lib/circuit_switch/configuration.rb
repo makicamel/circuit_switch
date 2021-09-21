@@ -1,10 +1,7 @@
 module CircuitSwitch
   class Configuration
-    attr_writer :report_tool, :report_paths
-
-    def report_tool
-      @report_tool ||= :bugsnag
-    end
+    attr_accessor :reporter
+    attr_writer :report_paths
 
     def report_paths
       @report_paths ||= [Rails.root]

@@ -4,7 +4,4 @@ module CircuitSwitch
 
   class CalledNotification < CircuitSwitchNotification
   end
-
-  class ReportToolNotFound < CircuitSwitchNotification
-  end
 end
