@@ -9,9 +9,7 @@ module CircuitSwitch
       circuit_switch = CircuitSwitch.find_or_initialize_by(caller: caller_path)
       if circuit_switch.watching?
         circuit_switch.increment
-        config.reporter.call(
-          CalledNotification.new("Watching process is called for #{circuit_switch.report_count}th. Report until for #{circuit_switch.switch_off_count}th.")
-        )
+        config.reporter.call(CalledNotification.new(circuit_switch.message))
       end
     end
   end
