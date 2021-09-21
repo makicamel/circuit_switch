@@ -5,7 +5,7 @@ module CircuitSwitch
     delegate :config, to: ::CircuitSwitch
 
     def perform
-      caller_path = caller.detect { |path| path.match?(/(#{config.report_paths.join('|')})/) }
+      caller_path = caller.detect { |path| path.match?(/(#{config.report_paths.join('|')})/) } || "/somewhere/in/library:in #{Date.today}"
       circuit_switch = CircuitSwitch.find_or_initialize_by(caller: caller_path)
       if circuit_switch.watching?
         circuit_switch.increment
