@@ -1,9 +1,13 @@
 module CircuitSwitch
   class Configuration
-    extend ActiveSupport::Autoload
-    include ActiveSupport::Configurable
+    attr_writer :report_tool, :report_paths
 
-    config_accessor(:report_tool) { :bugsnag }
-    config_accessor(:report_paths) { Rails.root }
+    def report_tool
+      @report_tool ||= :bugsnag
+    end
+
+    def report_paths
+      @report_paths ||= [Rails.root]
+    end
   end
 end

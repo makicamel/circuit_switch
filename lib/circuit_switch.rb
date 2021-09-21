@@ -4,9 +4,6 @@ require "circuit_switch/version"
 require "circuit_switch/workers/reporter"
 
 module CircuitSwitch
-  extend ActiveSupport::Autoload
-  autoload :Configuration
-
   class << self
     def configure
       yield config
