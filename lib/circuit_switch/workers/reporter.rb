@@ -1,4 +1,4 @@
-require 'circuit_switch/notifications'
+require 'circuit_switch/notification'
 
 module CircuitSwitch
   class Reporter < ::ActiveJob::Base
