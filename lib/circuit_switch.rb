@@ -14,8 +14,12 @@ module CircuitSwitch
     end
 
     # @param [Integer] switch_off_count
-    def watch_over(switch_off_count: nil)
+    # @param [Boolean or Proc] if
+    def watch_over(switch_off_count: nil, if: true)
       yield
+      condition = binding.local_variable_get(:if)
+      return unless condition.respond_to?(:call) ? condition.call : condition
+
       Reporter.perform_later(switch_off_count: switch_off_count)
     end
   end
