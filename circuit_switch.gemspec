@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'rails'
+  spec.add_dependency 'activejob'
+  spec.add_dependency 'activerecord'
 end
