@@ -13,9 +13,10 @@ module CircuitSwitch
       @config ||= Configuration.new
     end
 
-    def watch_over
+    # @param [Integer] switch_off_count
+    def watch_over(switch_off_count: nil)
       yield
-      Reporter.perform_later
+      Reporter.perform_later(switch_off_count: switch_off_count)
     end
   end
 end
