@@ -6,7 +6,8 @@ CircuitSwitch.configure do |config|
   config.reporter = nil
 
   # Allowed paths to report
-  # CircuitSwitch recognizes logic as unique that first match with these paths
+  # CircuitSwitch recognizes logic as unique that first match with these paths.
+  # Allowed all paths when set `[]`.
   # config.report_paths = [Rails.root]
 
   # Option to contain error backtrace for report
