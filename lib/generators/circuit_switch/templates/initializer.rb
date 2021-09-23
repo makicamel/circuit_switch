@@ -5,6 +5,9 @@ CircuitSwitch.configure do |config|
   # config.reporter = -> (message) { Bugsnag.notify(message) }
   config.reporter = nil
 
+  # Condition to report
+  # config.report_if = Rails.env.production?
+
   # Allowed paths to report
   # CircuitSwitch recognizes logic as unique that first match with these paths.
   # Allowed all paths when set `[]`.

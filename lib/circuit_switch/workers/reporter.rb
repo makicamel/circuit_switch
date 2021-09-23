@@ -9,7 +9,7 @@ module CircuitSwitch
         caller: called_path,
         switch_off_count: switch_off_count
       )
-      if circuit_switch.watching?
+      if circuit_switch.watching? && config.enable_report?
         circuit_switch.increment
         notification = raise CalledNotification.new(circuit_switch.message) rescue $!
         config.reporter.call(notification.to_message(called_path: called_path))
