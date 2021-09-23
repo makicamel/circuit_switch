@@ -13,4 +13,8 @@ CircuitSwitch.configure do |config|
   # You don't need backtrace when you report to some bug report tool.
   # You may be want backtrace when report to plain feed; e.g. Slack or email.
   # config.with_backtrace = false
+
+  # Omit path prefix in backtrace for readability
+  # Specify with `with_backtrace` option.
+  # config.strip_paths = [Dir.pwd]
 end
