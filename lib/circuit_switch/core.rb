@@ -7,9 +7,7 @@ module CircuitSwitch
       limit_count: nil,
       &block
     )
-      condition = binding.local_variable_get(:if)
-      return self unless condition.respond_to?(:call) ? condition.call : condition
-      return self if close_if.respond_to?(:call) ? close_if.call : close_if
+      return self if evaluate(close_if) || !evaluate(binding.local_variable_get(:if))
 
       yield
       self
@@ -21,12 +19,16 @@ module CircuitSwitch
       stop_report_if_reach_limit: true,
       limit_count: nil
     )
-      condition = binding.local_variable_get(:if)
-      return self unless condition.respond_to?(:call) ? condition.call : condition
-      return self if stop_report_if.respond_to?(:call) ? stop_report_if.call : stop_report_if
+      return self if evaluate(stop_report_if) || !evaluate(binding.local_variable_get(:if))
 
       Reporter.perform_later(switch_off_count: limit_count)
       self
+    end
+
+    private
+
+    def evaluate(boolean_or_proc)
+      boolean_or_proc.respond_to?(:call) ? boolean_or_proc.call : boolean_or_proc
     end
   end
 end
