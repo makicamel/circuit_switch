@@ -14,18 +14,42 @@ module CircuitSwitch
       @config ||= Configuration.new
     end
 
-    def run(switch_off_count: nil, if: true, &block)
+    # @param [Boolean, Proc] if
+    # @param [Boolean, Proc] close_if
+    # @param [Boolean] close_if_reach_limit
+    # @param [Integer] limit_count
+    # @param [Proc] block
+    def run(
+      if: true,
+      close_if: false,
+      close_if_reach_limit: true,
+      limit_count: nil,
+      &block
+    )
       Core.new.run(
-        switch_off_count: switch_off_count,
         if: binding.local_variable_get(:if),
+        close_if: close_if,
+        close_if_reach_limit: close_if_reach_limit,
+        limit_count: limit_count,
         &block
       )
     end
 
-    def report(switch_off_count: nil, if: true)
+    # @param [Boolean, Proc] if
+    # @param [Boolean, Proc] stop_report_if
+    # @param [Boolean] stop_report_if_reach_limit
+    # @param [Integer] limit_count
+    def report(
+      if: true,
+      stop_report_if: false,
+      stop_report_if_reach_limit: true,
+      limit_count: nil
+    )
       Core.new.report(
-        switch_off_count: switch_off_count,
-        if: binding.local_variable_get(:if)
+        if: binding.local_variable_get(:if),
+        stop_report_if: stop_report_if,
+        stop_report_if_reach_limit: stop_report_if_reach_limit,
+        limit_count: limit_count
       )
     end
   end
