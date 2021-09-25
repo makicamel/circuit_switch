@@ -4,16 +4,16 @@ module CircuitSwitch
   class Reporter < ::ActiveJob::Base
     delegate :config, to: ::CircuitSwitch
 
-    def perform(switch_off_count:)
+    def perform(limit_count:)
       circuit_switch = CircuitSwitch.find_or_initialize_by(
-        caller: called_path,
-        switch_off_count: switch_off_count
+        caller: called_path
       )
-      if circuit_switch.watching? && config.enable_report?
+      if config.enable_report?
         circuit_switch.increment
-        notification = raise CalledNotification.new(circuit_switch.message) rescue $!
-        config.reporter.call(notification.to_message(called_path: called_path))
+        raise CalledNotification.new(circuit_switch.message)
       end
+    rescue CalledNotification => notification
+      config.reporter.call(notification.to_message(called_path: called_path))
     end
 
     private
