@@ -1,7 +1,11 @@
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
-    def watching?
-      report_count < switch_off_count
+    def reached_run_limit?
+      run_count >= run_limit_count
+    end
+
+    def reached_report_limit?
+      report_count >= report_limit_count
     end
 
     def increment
@@ -9,7 +13,7 @@ module CircuitSwitch
     end
 
     def message
-      "Watching process is called for #{report_count}th. Report until for #{switch_off_count}th."
+      "Watching process is called for #{report_count}th. Report until for #{report_limit_count}th."
     end
 
     private
