@@ -23,6 +23,7 @@ module CircuitSwitch
       stop_report_if_reach_limit: true,
       limit_count: nil
     )
+      return self unless config.enable_report?
       return self if evaluate(stop_report_if) || !evaluate(binding.local_variable_get(:if))
       return self if stop_report_if_reach_limit && switch.reached_report_limit?
 
