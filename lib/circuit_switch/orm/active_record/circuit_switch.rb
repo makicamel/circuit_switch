@@ -1,5 +1,11 @@
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
+    def assign(run_limit_count: nil, report_limit_count: nil)
+      self.run_limit_count = run_limit_count if run_limit_count
+      self.report_limit_count = report_limit_count if report_limit_count
+      self
+    end
+
     def reached_run_limit?
       run_count >= run_limit_count
     end
@@ -8,8 +14,12 @@ module CircuitSwitch
       report_count >= report_limit_count
     end
 
-    def increment
-      with_writable { update(report_count: report_count + 1) }
+    def increment_run_count
+      with_writable { update!(run_count: run_count + 1) }
+    end
+
+    def increment_report_count
+      with_writable { update!(report_count: report_count + 1) }
     end
 
     def message
