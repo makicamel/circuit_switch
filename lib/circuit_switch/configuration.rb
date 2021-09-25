@@ -1,10 +1,20 @@
 module CircuitSwitch
   class Configuration
+    CIRCUIT_SWITCH = 'circuit_switch'.freeze
+
     attr_accessor :reporter
     attr_writer :report_paths, :report_if, :with_backtrace, :allowed_backtrace_paths, :strip_paths
 
     def report_paths
       @report_paths ||= [Rails.root]
+    end
+
+    def silent_paths=(paths)
+      @silent_paths = paths.append(CIRCUIT_SWITCH).uniq
+    end
+
+    def silent_paths
+      @silent_paths ||= [CIRCUIT_SWITCH]
     end
 
     def report_if
