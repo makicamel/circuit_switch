@@ -14,6 +14,7 @@ module CircuitSwitch
 
       yield
       switch.assign(run_limit_count: limit_count).increment_run_count
+      @run = true
       self
     end
 
@@ -31,7 +32,16 @@ module CircuitSwitch
         limit_count: limit_count,
         called_path: called_path
       )
+      @reported = true
       self
+    end
+
+    def run?
+      !!@run
+    end
+
+    def reported?
+      !!@reported
     end
 
     private

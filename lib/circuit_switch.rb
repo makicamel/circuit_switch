@@ -52,5 +52,19 @@ module CircuitSwitch
         limit_count: limit_count
       )
     end
+
+    # Syntax sugar for `CircuitSwitch.run`
+    # @param [Boolean, Proc] if
+    # @param [Integer] limit_count
+    def open?(if: true, limit_count: nil)
+      if block_given?
+        raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
+      end
+
+      Core.new.run(
+        if: binding.local_variable_get(:if),
+        limit_count: limit_count
+      ) {}.run?
+    end
   end
 end
