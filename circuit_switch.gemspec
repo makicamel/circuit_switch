@@ -25,4 +25,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activejob'
   spec.add_dependency 'activerecord'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'sqlite3'
+  spec.add_development_dependency 'test-unit'
+  spec.add_development_dependency 'test-unit-rr'
 end
