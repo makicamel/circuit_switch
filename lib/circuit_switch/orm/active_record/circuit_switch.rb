@@ -29,7 +29,7 @@ module CircuitSwitch
     private
 
     def with_writable
-      if ApplicationRecord.respond_to?(:with_writable)
+      if self.class.const_defined?(:ApplicationRecord) && ApplicationRecord.respond_to?(:with_writable)
         ApplicationRecord.with_writable { yield }
       else
         yield
