@@ -46,6 +46,10 @@ module CircuitSwitch
       stop_report_if_reach_limit: true,
       limit_count: nil
     )
+      if block_given?
+        raise ArgumentError.new('CircuitSwitch.report doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
+      end
+
       Core.new.report(
         if: binding.local_variable_get(:if),
         stop_report_if: stop_report_if,

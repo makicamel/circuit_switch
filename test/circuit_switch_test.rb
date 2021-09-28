@@ -15,6 +15,12 @@ class CircuitSwitchTest < Test::Unit::TestCase
     )
   end
 
+  def test_report_raises_error_if_block_given
+    assert_raise ArgumentError do
+      CircuitSwitch.report {}
+    end
+  end
+
   def test_open_returns_boolean
     assert_equal(
       true,
