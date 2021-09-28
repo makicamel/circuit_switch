@@ -1,6 +1,7 @@
 require "circuit_switch/configuration.rb"
 require "circuit_switch/core"
 require "circuit_switch/orm/active_record/circuit_switch"
+require "circuit_switch/railtie" if defined?(Rails::Railtie)
 require "circuit_switch/version"
 require "circuit_switch/workers/reporter"
 
