@@ -54,7 +54,8 @@ module CircuitSwitch
       @called_path ||= caller
         .reject { |path| path.match?(/(#{config.silent_paths.join('|')})/) }
         .detect { |path| path.match?(/(#{config.report_paths.join('|')})/) }
-        &.sub(/(#{config.strip_paths.join('|')})/, '') ||
+        &.sub(/(#{config.strip_paths.join('|')})/, '')
+        &.gsub(/[`']/, '') ||
         "/somewhere/in/library:in #{Date.today}"
     end
 
