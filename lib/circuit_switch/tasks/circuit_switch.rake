@@ -3,6 +3,7 @@ namespace :circuit_switch do
   task :run_limit_count_to_zero, ['caller'] => :environment do |_, arg|
     called_path = arg[:caller]
     puts "Start to update report_limit_count of circuit_switch for '#{called_path}' to zero."
+    sleep(3)
 
     switch = CircuitSwitch::CircuitSwitch.find_by!(caller: called_path)
     puts "circuit_switch is found. id: #{switch.id}."
@@ -15,6 +16,7 @@ namespace :circuit_switch do
   task :report_limit_count_to_zero, ['caller'] => :environment do |_, arg|
     called_path = arg[:caller]
     puts "Start to update report_limit_count of circuit_switch for '#{called_path}' to zero."
+    sleep(3)
 
     switch = CircuitSwitch::CircuitSwitch.find_by!(caller: called_path)
     puts "circuit_switch is found. id: #{switch.id}."
