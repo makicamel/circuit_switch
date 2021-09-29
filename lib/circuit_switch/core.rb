@@ -13,7 +13,7 @@ module CircuitSwitch
       return self if close_if_reach_limit && switch.reached_run_limit?
 
       yield
-      switch.date_to_be_removed ||= Date.today + 10
+      switch.due_date ||= Date.today + 10
       switch.assign(run_limit_count: limit_count).increment_run_count
       @run = true
       self
