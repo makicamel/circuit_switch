@@ -9,7 +9,7 @@ class CreateCircuitSwitches < ActiveRecord::Migration[6.1]
       t.integer :run_limit_count, default: 10, null: false
       t.integer :report_count, default: 0, null: false
       t.integer :report_limit_count, default: 10, null: false
-      t.date :date_to_be_removed, default: Time.now + 10.days, null: false
+      t.date :date_to_be_removed, null: false
       t.timestamps
     end
   end

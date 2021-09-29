@@ -6,6 +6,7 @@ module CircuitSwitch
 
     def perform(limit_count:, called_path:)
       circuit_switch = CircuitSwitch.find_or_initialize_by(caller: called_path)
+      circuit_switch.date_to_be_removed ||= Date.today + 10
       circuit_switch.assign(report_limit_count: limit_count).increment_report_count
       raise CalledNotification.new(circuit_switch.message)
     rescue CalledNotification => notification
