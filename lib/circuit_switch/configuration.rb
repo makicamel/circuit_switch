@@ -2,8 +2,8 @@ module CircuitSwitch
   class Configuration
     CIRCUIT_SWITCH = 'circuit_switch'.freeze
 
-    attr_accessor :reporter
-    attr_writer :report_paths, :report_if, :with_backtrace, :allowed_backtrace_paths, :strip_paths
+    attr_accessor :reporter, :due_date_notifier
+    attr_writer :report_paths, :report_if, :due_date, :with_backtrace, :allowed_backtrace_paths, :strip_paths
 
     def report_paths
       @report_paths ||= [Rails.root]
@@ -23,6 +23,10 @@ module CircuitSwitch
 
     def enable_report?
       report_if.respond_to?(:call) ? report_if.call : !!report_if
+    end
+
+    def due_date
+      @due_date = Date.today + 10
     end
 
     def with_backtrace
