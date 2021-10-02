@@ -1,6 +1,9 @@
 require 'circuit_switch/stacktrace_modifier'
 
 module CircuitSwitch
+  class CircuitSwitchError < RuntimeError
+  end
+
   class CircuitSwitchNotification < RuntimeError
   end
 
