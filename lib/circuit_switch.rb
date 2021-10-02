@@ -5,6 +5,7 @@ require "circuit_switch/railtie" if defined?(Rails::Railtie)
 require "circuit_switch/version"
 require "circuit_switch/workers/due_date_notifier"
 require "circuit_switch/workers/reporter"
+require "circuit_switch/workers/run_count_updater"
 
 module CircuitSwitch
   class << self

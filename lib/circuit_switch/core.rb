@@ -13,8 +13,11 @@ module CircuitSwitch
       return self if close_if_reach_limit && switch.reached_run_limit?
 
       yield
-      switch.due_date ||= config.due_date
-      switch.assign(run_limit_count: limit_count).increment_run_count
+      RunCountUpdater.perform_later(
+        limit_count: limit_count,
+        called_path: called_path,
+        reported: reported?
+      )
       @run = true
       self
     end
