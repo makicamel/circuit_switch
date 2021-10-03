@@ -104,6 +104,13 @@ class CoreTest < Test::Unit::TestCase
     end
   end
 
+  def test_report_raises_error_when_reporter_is_nil
+    stub(CircuitSwitch.config).reporter { nil }
+    assert_raise CircuitSwitch::CircuitSwitchError do
+      CircuitSwitch::Core.new.report
+    end
+  end
+
   def test_report_raises_error_when_stop_report_if_reach_limit_is_true_and_reached_limit_is_zero
     assert_raise CircuitSwitch::CircuitSwitchError do
       CircuitSwitch::Core.new.report(stop_report_if_reach_limit: true, limit_count: 0)

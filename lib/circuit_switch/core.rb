@@ -31,6 +31,9 @@ module CircuitSwitch
       stop_report_if_reach_limit: true,
       limit_count: nil
     )
+      if config.reporter.nil?
+        raise CircuitSwitchError.new('Set config.reporter.')
+      end
       if stop_report_if_reach_limit && limit_count == 0
         raise CircuitSwitchError.new('Can\'t set limit_count to 0 when stop_report_if_reach_limit is true')
       end
