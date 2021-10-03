@@ -34,7 +34,8 @@ module CircuitSwitch
 
       Reporter.perform_later(
         limit_count: limit_count,
-        called_path: called_path
+        called_path: called_path,
+        run: run?
       )
       @reported = true
       self
