@@ -6,12 +6,20 @@ module CircuitSwitch
       self
     end
 
-    def reached_run_limit?
-      run_count >= run_limit_count
+    def reached_run_limit?(new_value)
+      if new_value
+        run_count >= new_value
+      else
+        run_count >= run_limit_count
+      end
     end
 
-    def reached_report_limit?
-      report_count >= report_limit_count
+    def reached_report_limit?(new_value)
+      if new_value
+        report_count >= new_value
+      else
+        report_count >= report_limit_count
+      end
     end
 
     def increment_run_count
