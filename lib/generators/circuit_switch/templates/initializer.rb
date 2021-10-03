@@ -34,7 +34,6 @@ CircuitSwitch.configure do |config|
   # Allowed all paths when set `[]`.
   # config.allowed_backtrace_paths = [Dir.pwd]
 
-  # Omit path prefix in backtrace for readability
-  # Specify with `with_backtrace` option.
+  # Omit path prefix in caller and backtrace for readability
   # config.strip_paths = [Dir.pwd]
 end
