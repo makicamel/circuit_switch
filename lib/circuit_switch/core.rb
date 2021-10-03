@@ -50,10 +50,12 @@ module CircuitSwitch
       self
     end
 
+    # @return [Boolean]
     def run?
       !!@run
     end
 
+    # @return [Boolean]
     def reported?
       !!@reported
     end
