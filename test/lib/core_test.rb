@@ -51,6 +51,16 @@ class CoreTest < Test::Unit::TestCase
     )
   end
 
+  def test_run_doesnt_call_block_when_run_is_terminated
+    CircuitSwitch::CircuitSwitch.create(caller: called_path, due_date: due_date, run_is_terminated: true)
+    test_value = 0
+    CircuitSwitch::Core.new.run { test_value = 1 }
+    assert_equal(
+      0,
+      test_value
+    )
+  end
+
   def test_run_raises_error_when_close_if_reach_limit_is_true_and_reached_limit_is_zero
     assert_raise CircuitSwitch::CircuitSwitchError do
       CircuitSwitch::Core.new.run(close_if_reach_limit: true, limit_count: 0) {}
@@ -114,6 +124,15 @@ class CoreTest < Test::Unit::TestCase
   def test_report_raises_error_when_stop_report_if_reach_limit_is_true_and_reached_limit_is_zero
     assert_raise CircuitSwitch::CircuitSwitchError do
       CircuitSwitch::Core.new.report(stop_report_if_reach_limit: true, limit_count: 0)
+    end
+  end
+
+  def test_report_doesnt_report_when_report_is_terminated
+    CircuitSwitch::CircuitSwitch.create(caller: called_path, due_date: due_date, report_is_terminated: true)
+
+    stub(CircuitSwitch::Reporter).perform_later(limit_count: 1)
+    assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
+      CircuitSwitch::Core.new.report
     end
   end
 

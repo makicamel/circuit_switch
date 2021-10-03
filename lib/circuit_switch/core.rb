@@ -14,6 +14,7 @@ module CircuitSwitch
       end
       return self if evaluate(close_if) || !evaluate(binding.local_variable_get(:if))
       return self if close_if_reach_limit && switch.reached_run_limit?(limit_count)
+      return self if switch.run_is_terminated?
 
       yield
       RunCountUpdater.perform_later(
@@ -39,6 +40,7 @@ module CircuitSwitch
       end
       return self unless config.enable_report?
       return self if evaluate(stop_report_if) || !evaluate(binding.local_variable_get(:if))
+      return self if switch.report_is_terminated?
       return self if stop_report_if_reach_limit && switch.reached_report_limit?(limit_count)
 
       Reporter.perform_later(

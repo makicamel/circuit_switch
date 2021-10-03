@@ -4,8 +4,10 @@ class CreateCircuitSwitches < ActiveRecord::Migration<%= migration_version %>
       t.string :caller, null: false
       t.integer :run_count, default: 0, null: false
       t.integer :run_limit_count, default: 10, null: false
+      t.boolean :run_is_terminated, default: false, null: false
       t.integer :report_count, default: 0, null: false
       t.integer :report_limit_count, default: 10, null: false
+      t.boolean :report_is_terminated, default: false, null: false
       t.date :due_date, null: false
       t.timestamps
     end
