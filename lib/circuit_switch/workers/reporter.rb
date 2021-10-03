@@ -1,5 +1,3 @@
-require 'circuit_switch/notification'
-
 module CircuitSwitch
   class Reporter < ::ActiveJob::Base
     delegate :config, to: ::CircuitSwitch

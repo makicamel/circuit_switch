@@ -9,6 +9,9 @@ module CircuitSwitch
       limit_count: nil,
       &block
     )
+      if close_if_reach_limit && limit_count == 0
+        raise CircuitSwitchError.new('Can\'t set limit_count to 0 when close_if_reach_limit is true')
+      end
       return self if evaluate(close_if) || !evaluate(binding.local_variable_get(:if))
       return self if close_if_reach_limit && switch.reached_run_limit?(limit_count)
 
@@ -28,6 +31,9 @@ module CircuitSwitch
       stop_report_if_reach_limit: true,
       limit_count: nil
     )
+      if stop_report_if_reach_limit && limit_count == 0
+        raise CircuitSwitchError.new('Can\'t set limit_count to 0 when stop_report_if_reach_limit is true')
+      end
       return self unless config.enable_report?
       return self if evaluate(stop_report_if) || !evaluate(binding.local_variable_get(:if))
       return self if stop_report_if_reach_limit && switch.reached_report_limit?(limit_count)
