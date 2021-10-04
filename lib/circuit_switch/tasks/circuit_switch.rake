@@ -24,4 +24,17 @@ namespace :circuit_switch do
     switch.update(report_is_terminated: true)
     puts "Updated report_is_terminated of circuit_switch for '#{called_path}' to true."
   end
+
+  desc 'Delete switch'
+  task :delete_switch, ['caller'] => :environment do |_, arg|
+    called_path = arg[:caller]
+    puts "Start to delete circuit_switch for '#{called_path}'."
+    sleep(3)
+
+    switch = CircuitSwitch::CircuitSwitch.find_by!(caller: called_path)
+    puts "circuit_switch is found. id: #{switch.id}."
+
+    switch.destroy!
+    puts "Successfully deleted circuit_switch for '#{called_path}'."
+  end
 end
