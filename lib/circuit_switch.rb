@@ -18,10 +18,11 @@ module CircuitSwitch
       @config ||= Configuration.new
     end
 
-    # @param [Boolean, Proc] if
-    # @param [Boolean, Proc] close_if
-    # @param [Boolean] close_if_reach_limit
-    # @param [Integer] limit_count
+    # @param if [Boolean, Proc] Call proc when `if` is truthy (default: true)
+    # @param close_if [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
+    # @param close_if_reach_limit [Boolean] Stop calling proc when run count reaches limit (default: true)
+    # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil
+    #   Can't be set 0 when `close_if_reach_limit` is true (default: nil)
     # @param [Proc] block
     def run(
       if: true,
@@ -39,10 +40,11 @@ module CircuitSwitch
       )
     end
 
-    # @param [Boolean, Proc] if
-    # @param [Boolean, Proc] stop_report_if
-    # @param [Boolean] stop_report_if_reach_limit
-    # @param [Integer] limit_count
+    # @param if [Boolean, Proc] Report when `if` is truthy (default: true)
+    # @param stop_report_if [Boolean, Proc] Report when `close_if` is falsy (default: false)
+    # @param stop_report_if_reach_limit [Boolean] Stop reporting when reported count reaches limit (default: true)
+    # @param limit_count [Integer] Limit count. Use `report_limit_count` default value if it's nil
+    #   Can't be set 0 when `stop_report_if_reach_limit` is true (default: nil)
     def report(
       if: true,
       stop_report_if: false,
@@ -62,8 +64,8 @@ module CircuitSwitch
     end
 
     # Syntax sugar for `CircuitSwitch.run`
-    # @param [Boolean, Proc] if
-    # @param [Integer] limit_count
+    # @param if [Boolean, Proc] `CircuitSwitch.run` is runnable when `if` is truthy (default: true)
+    # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil. Can't be set 0 (default: nil)
     def open?(if: true, limit_count: nil)
       if block_given?
         raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
