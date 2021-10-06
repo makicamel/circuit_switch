@@ -26,7 +26,7 @@ module CircuitSwitch
     end
 
     def due_date
-      @due_date = Date.today + 10
+      @due_date ||= Date.today + 10
     end
 
     def with_backtrace
