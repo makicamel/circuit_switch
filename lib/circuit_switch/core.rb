@@ -70,8 +70,8 @@ module CircuitSwitch
 
     def called_path
       @called_path ||= caller
-        .reject { |path| path.match?(/(#{config.silent_paths.join('|')})/) }
-        .detect { |path| path.match?(/(#{config.report_paths.join('|')})/) }
+        .reject { |path| /(#{config.silent_paths.join('|')})/.match?(path) }
+        .detect { |path| /(#{config.report_paths.join('|')})/.match?(path) }
         &.sub(/(#{config.strip_paths.join('|')})/, '')
         &.gsub(/[`']/, '') ||
         "/somewhere/in/library:in #{Date.today}"
