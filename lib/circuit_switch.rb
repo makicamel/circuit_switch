@@ -65,14 +65,24 @@ module CircuitSwitch
 
     # Syntax sugar for `CircuitSwitch.run`
     # @param if [Boolean, Proc] `CircuitSwitch.run` is runnable when `if` is truthy (default: true)
+    # @param close_if [Boolean, Proc] `CircuitSwitch.run` is runnable when `close_if` is falsy (default: false)
+    # @param close_if_reach_limit [Boolean] `CircuitSwitch.run` is NOT runnable when run count reaches limit (default: true)
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil. Can't be set 0 (default: nil)
-    def open?(if: true, limit_count: nil)
+    # @return [Boolean]
+    def open?(
+      if: true,
+      close_if: false,
+      close_if_reach_limit: true,
+      limit_count: nil
+    )
       if block_given?
         raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
 
       Core.new.run(
         if: binding.local_variable_get(:if),
+        close_if: close_if,
+        close_if_reach_limit: close_if_reach_limit,
         limit_count: limit_count
       ) {}.run?
     end
