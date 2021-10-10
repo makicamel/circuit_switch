@@ -1,7 +1,11 @@
-ActiveRecord::Base.configurations = { test: { adapter: 'sqlite3', database: ':memory:' } }
-ActiveRecord::Base.establish_connection :test
+if ActiveRecord.version >= Gem::Version.new('6.0')
+  ActiveRecord::Base.configurations = { test: { adapter: 'sqlite3', database: ':memory:' } }
+  ActiveRecord::Base.establish_connection :test
+else
+  ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
+end
 
-class CreateCircuitSwitches < ActiveRecord::Migration[6.1]
+class CreateCircuitSwitches < ActiveRecord::Migration[5.0]
   def self.up
     create_table :circuit_switches do |t|
       t.string :caller, null: false
