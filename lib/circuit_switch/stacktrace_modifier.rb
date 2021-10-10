@@ -7,7 +7,7 @@ module CircuitSwitch
 
       def call(backtrace:)
         backtrace
-          .select { |path| path.match?(/(#{config.allowed_backtrace_paths.join('|')})/) }
+          .select { |path| /(#{config.allowed_backtrace_paths.join('|')})/.match?(path) }
           .map { |path| path.sub(/(#{config.strip_paths.join('|')})/, '') }
           .join("\n")
       end
