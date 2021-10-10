@@ -1,6 +1,6 @@
-# CircuitSwitch
+# circuit_switch
 
-CircuitSwitch is a gem for 'difficult' application; for example, few tests, too many meta-programming codes, low aggregation classes and few deploys.  
+circuit_switch is a gem for 'difficult' application; for example, few tests, too many meta-programming codes, low aggregation classes and few deploys.  
 This switch helps make changes easier and deploy safely.  
 You can deploy and check with a short code like following if the change is good or not, and when a problem is found, you can undo it without releasing it.
 
