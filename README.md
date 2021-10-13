@@ -83,7 +83,7 @@ unless circuit_open
 end
 ```
 
-`CircuitSwitch.run.run?` has syntax sugar. `open` doesn't receive proc.
+`CircuitSwitch.run.run?` has syntax sugar. `open?` doesn't receive proc.
 
 ```ruby
 if CircuitSwitch.open?
