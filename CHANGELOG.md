@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Modify log level from warn to info when default value for `close_if_reach_limit` is used.
+
 ## 0.2.0
 
 ### Breaking Changes
