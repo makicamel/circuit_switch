@@ -57,12 +57,13 @@ end
 ```
 
 `run` calls received proc, and when conditions are met, closes it's circuit.  
-To switch circuit opening and closing, some conditions can be set. By default, the circuit is closed when reached the specified count. The default count is 10. To change this default value, modify `circuit_switches.run_limit_count` default value in the migration file.  
+To switch circuit opening and closing, some conditions can be set. By default, the circuit is always opened.  
+You can also set `limit_count` to close circuit when reached the specified count. Default limit_count is 10. To change this default value, modify `circuit_switches.run_limit_count` default value in the migration file.  
 `run` receives optional arguments.
 
 - `if`: [Boolean, Proc] Call proc when `if` is truthy (default: true)
 - `close_if`: [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
-- `close_if_reach_limit`: [Boolean] Stop calling proc when run count reaches limit (default: true)
+- `close_if_reach_limit`: [Boolean] Stop calling proc when run count reaches limit (default: false)
 - `limit_count`: [Integer] Limit count. Use `run_limit_count` default value if it's nil (default: nil)  
   Can't be set 0 when `close_if_reach_limit` is true
 

@@ -20,14 +20,14 @@ module CircuitSwitch
 
     # @param if [Boolean, Proc] Call proc when `if` is truthy (default: true)
     # @param close_if [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
-    # @param close_if_reach_limit [Boolean] Stop calling proc when run count reaches limit (default: true)
+    # @param close_if_reach_limit [Boolean] Stop calling proc when run count reaches limit (default: false)
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil
     #   Can't be set 0 when `close_if_reach_limit` is true (default: nil)
     # @param [Proc] block
     def run(
       if: true,
       close_if: false,
-      close_if_reach_limit: true,
+      close_if_reach_limit: nil,
       limit_count: nil,
       &block
     )
