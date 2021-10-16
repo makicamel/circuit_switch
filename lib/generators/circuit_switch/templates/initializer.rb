@@ -29,7 +29,7 @@ CircuitSwitch.configure do |config|
   # You may be want backtrace when report to plain feed; e.g. Slack or email.
   # config.with_backtrace = false
 
-  # Allowd backtrace paths to report
+  # Allowed backtrace paths to report
   # Specify with `with_backtrace` option.
   # Allowed all paths when set `[]`.
   # config.allowed_backtrace_paths = [Dir.pwd]
