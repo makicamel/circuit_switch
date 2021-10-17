@@ -1,0 +1,13 @@
+class AddKeyToCircuitSwitches < ActiveRecord::Migration<%= migration_version %>
+  def up
+    add_column :circuit_switches, :key, :string, after: :id
+    CircuitSwitch::CircuitSwitch.all.each { |switch| switch.update_column(:key, switch.caller) }
+    change_column_null :circuit_switches, :key, false
+    add_index :circuit_switches, :key
+  end
+
+  def down
+    remove_index :circuit_switches, :key
+    remove_column :circuit_switches, :key
+  end
+end
