@@ -1,3 +1,7 @@
+require_relative 'notification'
+require_relative 'workers/reporter'
+require_relative 'workers/run_count_updater'
+
 module CircuitSwitch
   class Core
     delegate :config, to: ::CircuitSwitch

@@ -1,3 +1,5 @@
+require 'active_record'
+
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
     after_initialize do |switch|

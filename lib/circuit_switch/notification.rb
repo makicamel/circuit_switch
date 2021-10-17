@@ -1,4 +1,4 @@
-require 'circuit_switch/stacktrace_modifier'
+require_relative 'stacktrace_modifier'
 
 module CircuitSwitch
   class CircuitSwitchError < RuntimeError

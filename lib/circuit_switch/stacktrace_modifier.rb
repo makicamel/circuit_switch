@@ -1,4 +1,4 @@
-require 'circuit_switch/configuration.rb'
+require 'active_support/core_ext/module/delegation'
 
 module CircuitSwitch
   class StacktraceModifier

@@ -1,3 +1,6 @@
+require 'active_job'
+require 'active_support/core_ext/module/delegation'
+
 module CircuitSwitch
   class RunCountUpdater < ::ActiveJob::Base
     delegate :config, to: ::CircuitSwitch
