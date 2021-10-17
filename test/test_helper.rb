@@ -41,3 +41,5 @@ module CircuitSwitch::TestHelper
     Date.today + 10
   end
 end
+
+ActiveJob::Base.queue_adapter = :test
