@@ -1,5 +1,9 @@
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
+    after_initialize do |switch|
+      switch.key ||= switch.caller
+    end
+
     def assign(run_limit_count: nil, report_limit_count: nil)
       self.run_limit_count = run_limit_count if run_limit_count
       self.report_limit_count = report_limit_count if report_limit_count

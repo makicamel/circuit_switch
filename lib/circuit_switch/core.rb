@@ -3,6 +3,7 @@ module CircuitSwitch
     delegate :config, to: ::CircuitSwitch
 
     def run(
+      key: nil,
       if: true,
       close_if: false,
       close_if_reach_limit: nil,
@@ -16,12 +17,14 @@ module CircuitSwitch
         Logger.new($stdout).info('Default value for close_if_reach_limit is modified from true to false at ver 0.2.0.')
         close_if_reach_limit = false
       end
+      @key = key
       return self if evaluate(close_if) || !evaluate(binding.local_variable_get(:if))
       return self if close_if_reach_limit && switch.reached_run_limit?(limit_count)
       return self if switch.run_is_terminated?
 
       yield
       RunCountUpdater.perform_later(
+        key: key,
         limit_count: limit_count,
         called_path: called_path,
         reported: reported?
@@ -31,6 +34,7 @@ module CircuitSwitch
     end
 
     def report(
+      key: nil,
       if: true,
       stop_report_if: false,
       stop_report_if_reach_limit: true,
@@ -42,12 +46,14 @@ module CircuitSwitch
       if stop_report_if_reach_limit && limit_count == 0
         raise CircuitSwitchError.new('Can\'t set limit_count to 0 when stop_report_if_reach_limit is true')
       end
+      @key = key
       return self unless config.enable_report?
       return self if evaluate(stop_report_if) || !evaluate(binding.local_variable_get(:if))
       return self if switch.report_is_terminated?
       return self if stop_report_if_reach_limit && switch.reached_report_limit?(limit_count)
 
       Reporter.perform_later(
+        key: key,
         limit_count: limit_count,
         called_path: called_path,
         run: run?
@@ -69,7 +75,13 @@ module CircuitSwitch
     private
 
     def switch
-      @switch ||= CircuitSwitch.find_or_initialize_by(caller: called_path)
+      return @switch if defined? @switch
+
+      if @key
+        @switch = CircuitSwitch.find_or_initialize_by(key: @key)
+      else
+        @switch = CircuitSwitch.find_or_initialize_by(caller: called_path)
+      end
     end
 
     def called_path

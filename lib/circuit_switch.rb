@@ -18,6 +18,7 @@ module CircuitSwitch
       @config ||= Configuration.new
     end
 
+    # @param key [String] Named key to find switch instead of caller
     # @param if [Boolean, Proc] Call proc when `if` is truthy (default: true)
     # @param close_if [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
     # @param close_if_reach_limit [Boolean] Stop calling proc when run count reaches limit (default: false)
@@ -25,6 +26,7 @@ module CircuitSwitch
     #   Can't be set 0 when `close_if_reach_limit` is true (default: nil)
     # @param [Proc] block
     def run(
+      key: nil,
       if: true,
       close_if: false,
       close_if_reach_limit: nil,
@@ -32,6 +34,7 @@ module CircuitSwitch
       &block
     )
       Core.new.run(
+        key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
@@ -40,12 +43,14 @@ module CircuitSwitch
       )
     end
 
+    # @param key [String] Named key to find switch instead of caller
     # @param if [Boolean, Proc] Report when `if` is truthy (default: true)
     # @param stop_report_if [Boolean, Proc] Report when `close_if` is falsy (default: false)
     # @param stop_report_if_reach_limit [Boolean] Stop reporting when reported count reaches limit (default: true)
     # @param limit_count [Integer] Limit count. Use `report_limit_count` default value if it's nil
     #   Can't be set 0 when `stop_report_if_reach_limit` is true (default: nil)
     def report(
+      key: nil,
       if: true,
       stop_report_if: false,
       stop_report_if_reach_limit: true,
@@ -56,6 +61,7 @@ module CircuitSwitch
       end
 
       Core.new.report(
+        key: key,
         if: binding.local_variable_get(:if),
         stop_report_if: stop_report_if,
         stop_report_if_reach_limit: stop_report_if_reach_limit,
