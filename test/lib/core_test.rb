@@ -7,27 +7,15 @@ class CoreTest < Test::Unit::TestCase
     CircuitSwitch::CircuitSwitch.truncate
   end
 
-  def runner(opts = {})
+  def runner(arguments = {})
     core = CircuitSwitch::Builder.new
-    core.assign_runner(
-      key: opts[:key],
-      if: opts[:if],
-      close_if: opts[:close_if],
-      close_if_reach_limit: opts[:close_if_reach_limit],
-      limit_count: opts[:limit_count]
-    )
+    core.assign_runner(**arguments)
     core
   end
 
-  def reporter(opts = {})
+  def reporter(arguments = {})
     core = CircuitSwitch::Builder.new
-    core.assign_reporter(
-      key: opts[:key],
-      if: opts[:if],
-      stop_report_if: opts[:stop_report_if],
-      stop_report_if_reach_limit: opts[:stop_report_if_reach_limit],
-      limit_count: opts[:limit_count]
-    )
+    core.assign_reporter(**arguments)
     core
   end
 

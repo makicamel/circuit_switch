@@ -22,22 +22,15 @@ module CircuitSwitch
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil
     #   Can't be set 0 when `close_if_reach_limit` is true (default: nil)
     # @param [Proc] block
-    def run(
-      key: nil,
-      if: true,
-      close_if: false,
-      close_if_reach_limit: nil,
-      limit_count: nil,
-      &block
-    )
-      Builder.new.run(
+    def run(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, &block)
+      arguments = {
         key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
-        limit_count: limit_count,
-        &block
-      )
+        limit_count: limit_count
+      }.select { |_, v| v }
+      Builder.new.run(**arguments, &block)
     end
 
     # @param key [String] Named key to find switch instead of caller
@@ -46,24 +39,19 @@ module CircuitSwitch
     # @param stop_report_if_reach_limit [Boolean] Stop reporting when reported count reaches limit (default: true)
     # @param limit_count [Integer] Limit count. Use `report_limit_count` default value if it's nil
     #   Can't be set 0 when `stop_report_if_reach_limit` is true (default: nil)
-    def report(
-      key: nil,
-      if: true,
-      stop_report_if: false,
-      stop_report_if_reach_limit: true,
-      limit_count: nil
-    )
+    def report(key: nil, if: nil, stop_report_if: nil, stop_report_if_reach_limit: nil, limit_count: nil)
       if block_given?
         raise ArgumentError.new('CircuitSwitch.report doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
 
-      Builder.new.report(
+      arguments = {
         key: key,
         if: binding.local_variable_get(:if),
         stop_report_if: stop_report_if,
         stop_report_if_reach_limit: stop_report_if_reach_limit,
         limit_count: limit_count
-      )
+      }.select { |_, v| v }
+      Builder.new.report(**arguments)
     end
 
     # Syntax sugar for `CircuitSwitch.run`
@@ -73,24 +61,19 @@ module CircuitSwitch
     # @param close_if_reach_limit [Boolean] `CircuitSwitch.run` is NOT runnable when run count reaches limit (default: true)
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil. Can't be set 0 (default: nil)
     # @return [Boolean]
-    def open?(
-      key: nil,
-      if: true,
-      close_if: false,
-      close_if_reach_limit: true,
-      limit_count: nil
-    )
+    def open?(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil)
       if block_given?
         raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
 
-      Builder.new.run(
+      arguments = {
         key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
         limit_count: limit_count
-      ) {}.run?
+      }.select { |_, v| v }
+      Builder.new.run(**arguments) {}.run?
     end
   end
 end
