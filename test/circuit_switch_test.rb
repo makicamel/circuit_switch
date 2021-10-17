@@ -1,16 +1,16 @@
 require 'test_helper'
 
 class CircuitSwitchTest < Test::Unit::TestCase
-  def test_run_returns_core_instance
+  def test_run_returns_builder_instance
     assert_instance_of(
-      CircuitSwitch::Core,
+      CircuitSwitch::Builder,
       CircuitSwitch.run {}
     )
   end
 
-  def test_report_returns_core_instance
+  def test_report_returns_builder_instance
     assert_instance_of(
-      CircuitSwitch::Core,
+      CircuitSwitch::Builder,
       CircuitSwitch.report
     )
   end

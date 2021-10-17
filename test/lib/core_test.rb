@@ -7,10 +7,34 @@ class CoreTest < Test::Unit::TestCase
     CircuitSwitch::CircuitSwitch.truncate
   end
 
+  def runner(opts = {})
+    core = CircuitSwitch::Builder.new
+    core.assign_runner(
+      key: opts[:key],
+      if: opts[:if],
+      close_if: opts[:close_if],
+      close_if_reach_limit: opts[:close_if_reach_limit],
+      limit_count: opts[:limit_count]
+    )
+    core
+  end
+
+  def reporter(opts = {})
+    core = CircuitSwitch::Builder.new
+    core.assign_reporter(
+      key: opts[:key],
+      if: opts[:if],
+      stop_report_if: opts[:stop_report_if],
+      stop_report_if_reach_limit: opts[:stop_report_if_reach_limit],
+      limit_count: opts[:limit_count]
+    )
+    core
+  end
+
   def test_run_calls_block_when_all_conditions_are_clear
     stub(CircuitSwitch::RunCountUpdater).perform_later
     test_value = 0
-    CircuitSwitch::Core.new.run { test_value = 1 }
+    runner.execute_run { test_value = 1 }
     assert_equal(
       1,
       test_value
@@ -19,7 +43,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_run_calls_updater_when_block_is_called_and_no_switch
     stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
-    CircuitSwitch::Core.new.run {}
+    runner.execute_run {}
     assert_received(CircuitSwitch::RunCountUpdater) do |reporter|
       reporter.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
     end
@@ -31,7 +55,7 @@ class CoreTest < Test::Unit::TestCase
     CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
 
     test_value = 0
-    CircuitSwitch::Core.new.run(close_if_reach_limit: false) { test_value = 1 }
+    runner(close_if_reach_limit: false).execute_run { test_value = 1 }
     assert_equal(
       1,
       test_value
@@ -44,7 +68,7 @@ class CoreTest < Test::Unit::TestCase
     CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
 
     test_value = 0
-    CircuitSwitch::Core.new.run(close_if_reach_limit: true) { test_value = 1 }
+    runner(close_if_reach_limit: true).execute_run { test_value = 1 }
     assert_equal(
       0,
       test_value
@@ -54,7 +78,7 @@ class CoreTest < Test::Unit::TestCase
   def test_run_doesnt_call_block_when_run_is_terminated
     CircuitSwitch::CircuitSwitch.create(caller: called_path, due_date: due_date, run_is_terminated: true)
     test_value = 0
-    CircuitSwitch::Core.new.run { test_value = 1 }
+    runner.execute_run { test_value = 1 }
     assert_equal(
       0,
       test_value
@@ -63,13 +87,13 @@ class CoreTest < Test::Unit::TestCase
 
   def test_run_raises_error_when_close_if_reach_limit_is_true_and_reached_limit_is_zero
     assert_raise CircuitSwitch::CircuitSwitchError do
-      CircuitSwitch::Core.new.run(close_if_reach_limit: true, limit_count: 0) {}
+      runner(close_if_reach_limit: true, limit_count: 0).execute_run {}
     end
   end
 
   def test_run_doesnt_call_block_when_close_if_is_true
     test_value = 0
-    CircuitSwitch::Core.new.run(close_if: true) { test_value = 1 }
+    runner(close_if: true).execute_run { test_value = 1 }
     assert_equal(
       0,
       test_value
@@ -78,7 +102,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_run_doesnt_call_block_when_if_is_false
     test_value = 0
-    CircuitSwitch::Core.new.run(if: false) { test_value = 1 }
+    runner(if: false).execute_run { test_value = 1 }
     assert_equal(
       0,
       test_value
@@ -87,7 +111,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_report_reports_when_all_conditions_are_clear
     stub(CircuitSwitch::Reporter).perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
-    CircuitSwitch::Core.new.report
+    reporter.execute_report
     assert_received(CircuitSwitch::Reporter) do |reporter|
       reporter.perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
     end
@@ -98,7 +122,7 @@ class CoreTest < Test::Unit::TestCase
     CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1, key: nil, called_path: called_path, run: false)
 
-    CircuitSwitch::Core.new.report(limit_count: 1, stop_report_if_reach_limit: false)
+    reporter(limit_count: 1, stop_report_if_reach_limit: false).execute_report
     assert_received(CircuitSwitch::Reporter) do |reporter|
       reporter.perform_later(limit_count: 1, key: nil, called_path: called_path, run: false)
     end
@@ -110,20 +134,20 @@ class CoreTest < Test::Unit::TestCase
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 10, called_path: called_path, run: false)
 
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
-      CircuitSwitch::Core.new.report(limit_count: 1, stop_report_if_reach_limit: true)
+      reporter(limit_count: 1, stop_report_if_reach_limit: true).execute_report
     end
   end
 
   def test_report_raises_error_when_reporter_is_nil
     stub(CircuitSwitch.config).reporter { nil }
     assert_raise CircuitSwitch::CircuitSwitchError do
-      CircuitSwitch::Core.new.report
+      reporter.execute_report
     end
   end
 
   def test_report_raises_error_when_stop_report_if_reach_limit_is_true_and_reached_limit_is_zero
     assert_raise CircuitSwitch::CircuitSwitchError do
-      CircuitSwitch::Core.new.report(stop_report_if_reach_limit: true, limit_count: 0)
+      reporter(stop_report_if_reach_limit: true, limit_count: 0).execute_report
     end
   end
 
@@ -132,21 +156,21 @@ class CoreTest < Test::Unit::TestCase
 
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1)
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
-      CircuitSwitch::Core.new.report
+      reporter.execute_report
     end
   end
 
   def test_report_doesnt_report_when_stop_report_if_is_true
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1)
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
-      CircuitSwitch::Core.new.report(stop_report_if: true)
+      reporter(stop_report_if: true).execute_report
     end
   end
 
   def test_report_doesnt_report_when_if_is_false
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1)
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
-      CircuitSwitch::Core.new.report(if: false)
+      reporter(if: false).execute_report
     end
   end
 
@@ -154,7 +178,7 @@ class CoreTest < Test::Unit::TestCase
     stub(CircuitSwitch.config).enable_report? { false }
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1)
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do
-      CircuitSwitch::Core.new.report
+      reporter.execute_report
     end
   end
 
@@ -162,14 +186,14 @@ class CoreTest < Test::Unit::TestCase
     stub(CircuitSwitch::RunCountUpdater).perform_later
     assert_equal(
       true,
-      CircuitSwitch::Core.new.run {}.run?
+      runner.execute_run {}.run?
     )
   end
 
   def test_run_with_question_returns_false_when_didnt_run
     assert_equal(
       false,
-      CircuitSwitch::Core.new.run(if: false) {}.run?
+      runner(if: false).execute_run {}.run?
     )
   end
 
@@ -177,7 +201,7 @@ class CoreTest < Test::Unit::TestCase
     stub(CircuitSwitch::Reporter).perform_later
     assert_equal(
       true,
-      CircuitSwitch::Core.new.report.reported?
+      reporter.execute_report.reported?
     )
   end
 
@@ -185,7 +209,7 @@ class CoreTest < Test::Unit::TestCase
     stub(CircuitSwitch::Reporter).perform_later
     assert_equal(
       false,
-      CircuitSwitch::Core.new.report(if: false).reported?
+      reporter(if: false).execute_report.reported?
     )
   end
 end

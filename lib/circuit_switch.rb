@@ -1,5 +1,5 @@
 require_relative 'circuit_switch/configuration'
-require_relative 'circuit_switch/core'
+require_relative 'circuit_switch/builder'
 require_relative 'circuit_switch/orm/active_record/circuit_switch'
 require_relative 'circuit_switch/railtie' if defined?(Rails::Railtie)
 require_relative 'circuit_switch/version'
@@ -30,7 +30,7 @@ module CircuitSwitch
       limit_count: nil,
       &block
     )
-      Core.new.run(
+      Builder.new.run(
         key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
@@ -57,7 +57,7 @@ module CircuitSwitch
         raise ArgumentError.new('CircuitSwitch.report doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
 
-      Core.new.report(
+      Builder.new.report(
         key: key,
         if: binding.local_variable_get(:if),
         stop_report_if: stop_report_if,
@@ -82,7 +82,7 @@ module CircuitSwitch
         raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
 
-      Core.new.run(
+      Builder.new.run(
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
