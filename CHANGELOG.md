@@ -10,7 +10,7 @@
 
 ## 0.1.2
 
-* Modify `CircuitSwitch.open?` recieves same arguments as `CircuitSwtich.run`
+* Modify `CircuitSwitch.open?` receives same arguments as `CircuitSwitch.run`
 
 ## 0.1.1
 
