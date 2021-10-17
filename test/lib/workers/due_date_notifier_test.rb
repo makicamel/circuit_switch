@@ -19,7 +19,7 @@ class DueDateNotifierTest < Test::Unit::TestCase
     due_date = Date.today
     circuit_switch = CircuitSwitch::CircuitSwitch.create(caller: called_path, due_date: due_date)
     message = "Due date has come! Let's consider about removing switches and cleaning up code! :)\n" +
-      "id: #{circuit_switch.id}, caller: '#{circuit_switch.caller}' , created_at: #{circuit_switch.created_at}"
+      "id: #{circuit_switch.id}, key: '#{circuit_switch.caller}', caller: '#{circuit_switch.caller}', created_at: #{circuit_switch.created_at}"
     assert_equal(
       message,
       CircuitSwitch::DueDateNotifier.new.perform

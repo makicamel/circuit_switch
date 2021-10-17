@@ -18,15 +18,15 @@ class CoreTest < Test::Unit::TestCase
   end
 
   def test_run_calls_updater_when_block_is_called_and_no_switch
-    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, called_path: called_path, reported: false)
+    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
     CircuitSwitch::Core.new.run {}
     assert_received(CircuitSwitch::RunCountUpdater) do |reporter|
-      reporter.perform_later(limit_count: nil, called_path: called_path, reported: false)
+      reporter.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
     end
   end
 
   def test_run_calls_block_when_close_if_reach_limit_is_false_and_reached_limit
-    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, called_path: called_path, reported: false)
+    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
     limit_count = 1
     CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
 
@@ -86,21 +86,21 @@ class CoreTest < Test::Unit::TestCase
   end
 
   def test_report_reports_when_all_conditions_are_clear
-    stub(CircuitSwitch::Reporter).perform_later(limit_count: nil, called_path: called_path, run: false)
+    stub(CircuitSwitch::Reporter).perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
     CircuitSwitch::Core.new.report
     assert_received(CircuitSwitch::Reporter) do |reporter|
-      reporter.perform_later(limit_count: nil, called_path: called_path, run: false)
+      reporter.perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
     end
   end
 
   def test_report_reports_when_close_if_reach_limit_is_false_and_reached_limit
     limit_count = 1
     CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count
-    stub(CircuitSwitch::Reporter).perform_later(limit_count: 1, called_path: called_path, run: false)
+    stub(CircuitSwitch::Reporter).perform_later(limit_count: 1, key: nil, called_path: called_path, run: false)
 
     CircuitSwitch::Core.new.report(limit_count: 1, stop_report_if_reach_limit: false)
     assert_received(CircuitSwitch::Reporter) do |reporter|
-      reporter.perform_later(limit_count: 1, called_path: called_path, run: false)
+      reporter.perform_later(limit_count: 1, key: nil, called_path: called_path, run: false)
     end
   end
 
