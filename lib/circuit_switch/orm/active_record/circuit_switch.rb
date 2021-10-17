@@ -1,3 +1,5 @@
+require 'active_record'
+
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
     def assign(run_limit_count: nil, report_limit_count: nil)

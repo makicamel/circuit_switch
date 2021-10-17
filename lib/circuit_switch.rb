@@ -1,12 +1,9 @@
-require "circuit_switch/configuration.rb"
-require "circuit_switch/core"
-require "circuit_switch/notification"
-require "circuit_switch/orm/active_record/circuit_switch"
-require "circuit_switch/railtie" if defined?(Rails::Railtie)
-require "circuit_switch/version"
-require "circuit_switch/workers/due_date_notifier"
-require "circuit_switch/workers/reporter"
-require "circuit_switch/workers/run_count_updater"
+require_relative 'circuit_switch/configuration'
+require_relative 'circuit_switch/core'
+require_relative 'circuit_switch/orm/active_record/circuit_switch'
+require_relative 'circuit_switch/railtie' if defined?(Rails::Railtie)
+require_relative 'circuit_switch/version'
+require_relative 'circuit_switch/workers/due_date_notifier'
 
 module CircuitSwitch
   class << self
