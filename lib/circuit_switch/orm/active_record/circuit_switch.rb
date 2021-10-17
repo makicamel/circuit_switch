@@ -35,7 +35,8 @@ module CircuitSwitch
     end
 
     def message
-      "Watching process is called for #{report_count}th. Report until for #{report_limit_count}th."
+      process = key == caller ? 'Watching process' : "Process for '#{key}'"
+      "#{process} is called for #{report_count}th. Report until for #{report_limit_count}th."
     end
 
     private

@@ -10,7 +10,7 @@ module CircuitSwitch
       circuit_switches = CircuitSwitch.where('due_date <= ?', Date.today).order(id: :asc)
       if circuit_switches.present?
         message = "Due date has come! Let's consider about removing switches and cleaning up code! :)\n" +
-          circuit_switches.map { |switch|  "id: #{switch.id}, caller: '#{switch.caller}' , created_at: #{switch.created_at}" }.join("\n")
+          circuit_switches.map { |switch|  "id: #{switch.id}, key: '#{switch.key}', caller: '#{switch.caller}', created_at: #{switch.created_at}" }.join("\n")
         config.due_date_notifier.call(message)
       else
         switches_count = CircuitSwitch.all.size
