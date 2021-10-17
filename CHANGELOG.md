@@ -1,5 +1,17 @@
 ## 0.2.1
 
+### New features
+
+* Add `key` argument for easy handling for human more than caller.  
+To migrate, run next.
+
+```
+rails generate circuit_switch:migration add_key
+rails db:migrate
+```
+
+### Changes
+
 * Modify log level from warn to info when default value for `close_if_reach_limit` is used.
 
 ## 0.2.0

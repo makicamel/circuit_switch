@@ -37,7 +37,7 @@ rails generate circuit_switch:install
 ```
 
 Generate a migration for ActiveRecord.  
-This table saves circuit caller, called count, limit count and so on.
+This table saves named key, circuit caller, called count, limit count and so on.
 
 ```
 rails generate circuit_switch:migration circuit_switch
@@ -61,6 +61,8 @@ To switch circuit opening and closing, some conditions can be set. By default, t
 You can also set `limit_count` to close circuit when reached the specified count. Default limit_count is 10. To change this default value, modify `circuit_switches.run_limit_count` default value in the migration file.  
 `run` receives optional arguments.
 
+- `key`: [String] Named key to find switch instead of caller  
+  If no key passed, use caller.
 - `if`: [Boolean, Proc] Call proc when `if` is truthy (default: true)
 - `close_if`: [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
 - `close_if_reach_limit`: [Boolean] Stop calling proc when run count reaches limit (default: false)
@@ -106,6 +108,8 @@ CircuitSwitch.report(if: some_condition)
 Same as `run`, some conditions can be set. By default, reporting is stopped when reached the specified count. The default count is 10. To change this default value, modify `circuit_switches.report_limit_count` default value in the migration file.  
 `report` receives optional arguments.
 
+- `key`: [String] Named key to find switch instead of caller  
+  If no key passed, use caller.
 - `if`: [Boolean, Proc] Report when `if` is truthy (default: true)
 - `stop_report_if`: [Boolean, Proc] Report when `close_if` is falsy (default: false)
 - `stop_report_if_reach_limit`: [Boolean] Stop reporting when reported count reaches limit (default: true)
@@ -131,10 +135,11 @@ called_path: /app/services/greetings_service:21 block in validate
 
 ## Task
 
-When find a problem and you want to terminate running or reporting right now, execute a task with it's caller.
+When find a problem and you want to terminate running or reporting right now, execute a task with it's caller.  
+You can specify either key or caller.
 
 ```
-rake circuit_switch:terminate_to_run[/app/services/greetings_service:21 block in validate]
+rake circuit_switch:terminate_to_run[your_key]
 rake circuit_switch:terminate_to_report[/app/services/greetings_service:21 block in validate]
 ```
 
