@@ -13,6 +13,7 @@ rails db:migrate
 ### Changes
 
 * Modify log level from warn to info when default value for `close_if_reach_limit` is used.
+* Suppress warning that ivar is not initialized.
 
 ## 0.2.0
 

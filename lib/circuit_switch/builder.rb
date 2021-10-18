@@ -2,6 +2,12 @@ require_relative 'core'
 
 module CircuitSwitch
   class Builder < Core
+    def initialize
+      super
+      @run = false
+      @reported = false
+    end
+
     def assign_runner(
       key: nil,
       if: true,

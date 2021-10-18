@@ -56,12 +56,12 @@ module CircuitSwitch
 
     # @return [Boolean]
     def run?
-      !!@run
+      @run
     end
 
     # @return [Boolean]
     def reported?
-      !!@reported
+      @reported
     end
 
     private
