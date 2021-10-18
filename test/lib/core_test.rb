@@ -30,15 +30,15 @@ class CoreTest < Test::Unit::TestCase
   end
 
   def test_run_calls_updater_when_block_is_called_and_no_switch
-    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
+    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
     runner.execute_run {}
-    assert_received(CircuitSwitch::RunCountUpdater) do |reporter|
-      reporter.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
+    assert_received(CircuitSwitch::RunCountUpdater) do |updator|
+      updator.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
     end
   end
 
   def test_run_calls_block_when_close_if_reach_limit_is_false_and_reached_limit
-    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false)
+    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
     limit_count = 1
     CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
 

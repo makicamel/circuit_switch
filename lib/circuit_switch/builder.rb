@@ -13,13 +13,15 @@ module CircuitSwitch
       if: true,
       close_if: false,
       close_if_reach_limit: nil,
-      limit_count: nil
+      limit_count: nil,
+      initially_closed: false
     )
       @key = key
       @run_if = binding.local_variable_get(:if)
       @close_if = close_if
       @close_if_reach_limit = close_if_reach_limit
       @run_limit_count = limit_count
+      @initially_closed = initially_closed
     end
 
     def assign_reporter(
@@ -36,13 +38,14 @@ module CircuitSwitch
       @report_limit_count = limit_count
     end
 
-    def run(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, &block)
+    def run(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, initially_closed: nil, &block)
       arguments = {
         key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
-        limit_count: limit_count
+        limit_count: limit_count,
+        initially_closed: initially_closed,
       }.select { |_, v| v }
       assign_runner(**arguments)
       execute_run(&block)

@@ -5,7 +5,7 @@ module CircuitSwitch
   class RunCountUpdater < ::ActiveJob::Base
     delegate :config, to: ::CircuitSwitch
 
-    def perform(key:, limit_count:, called_path:, reported:)
+    def perform(key:, limit_count:, called_path:, reported:, initially_closed:)
       # Wait for Reporter saves circuit_switch
       sleep(3) if reported
 
@@ -14,7 +14,7 @@ module CircuitSwitch
         raise ActiveRecord::RecordNotFound.new('Couldn\'t find CircuitSwitch::CircuitSwitch')
       end
 
-      circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path)
+      circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path, run_is_terminated: initially_closed)
       circuit_switch.due_date ||= config.due_date
       circuit_switch.assign(run_limit_count: limit_count).increment_run_count
     end

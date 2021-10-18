@@ -21,14 +21,16 @@ module CircuitSwitch
     # @param close_if_reach_limit [Boolean] Stop calling proc when run count reaches limit (default: false)
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil
     #   Can't be set 0 when `close_if_reach_limit` is true (default: nil)
+    # @param initially_closed [Boolean] Create switch with terminated mode (default: false)
     # @param [Proc] block
-    def run(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, &block)
+    def run(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, initially_closed: nil, &block)
       arguments = {
         key: key,
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
-        limit_count: limit_count
+        limit_count: limit_count,
+        initially_closed: initially_closed,
       }.select { |_, v| v }
       Builder.new.run(**arguments, &block)
     end
@@ -60,8 +62,9 @@ module CircuitSwitch
     # @param close_if [Boolean, Proc] `CircuitSwitch.run` is runnable when `close_if` is falsy (default: false)
     # @param close_if_reach_limit [Boolean] `CircuitSwitch.run` is NOT runnable when run count reaches limit (default: true)
     # @param limit_count [Integer] Limit count. Use `run_limit_count` default value if it's nil. Can't be set 0 (default: nil)
+    # @param initially_closed [Boolean] Create switch with terminated mode (default: false)
     # @return [Boolean]
-    def open?(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil)
+    def open?(key: nil, if: nil, close_if: nil, close_if_reach_limit: nil, limit_count: nil, initially_closed: nil)
       if block_given?
         raise ArgumentError.new('CircuitSwitch.open doesn\'t receive block. Use CircuitSwitch.run if you want to pass block.')
       end
@@ -71,7 +74,8 @@ module CircuitSwitch
         if: binding.local_variable_get(:if),
         close_if: close_if,
         close_if_reach_limit: close_if_reach_limit,
-        limit_count: limit_count
+        limit_count: limit_count,
+        initially_closed: initially_closed,
       }.select { |_, v| v }
       Builder.new.run(**arguments) {}.run?
     end

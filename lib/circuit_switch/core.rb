@@ -5,7 +5,7 @@ require_relative 'workers/run_count_updater'
 module CircuitSwitch
   class Core
     delegate :config, to: ::CircuitSwitch
-    attr_reader :key, :run_if, :close_if, :close_if_reach_limit, :run_limit_count,
+    attr_reader :key, :run_if, :close_if, :close_if_reach_limit, :run_limit_count, :initially_closed,
       :report_if, :stop_report_if, :stop_report_if_reach_limit, :report_limit_count
 
     def execute_run(&block)
@@ -21,14 +21,17 @@ module CircuitSwitch
       return self if close_if_reach_limit && switch.reached_run_limit?(run_limit_count)
       return self if switch.run_is_terminated?
 
-      yield
+      unless switch.new_record? && initially_closed
+        yield
+        @run = true
+      end
       RunCountUpdater.perform_later(
         key: key,
         limit_count: run_limit_count,
         called_path: called_path,
-        reported: reported?
+        reported: reported?,
+        initially_closed: initially_closed
       )
-      @run = true
       self
     end
 
