@@ -51,7 +51,6 @@ class CoreTest < Test::Unit::TestCase
   end
 
   def test_run_doesnt_call_block_when_close_if_reach_limit_is_true_and_reached_limit
-    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, called_path: called_path, reported: false)
     limit_count = 1
     CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
 
