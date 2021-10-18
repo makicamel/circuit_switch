@@ -68,6 +68,7 @@ You can also set `limit_count` to close circuit when reached the specified count
 - `close_if_reach_limit`: [Boolean] Stop calling proc when run count reaches limit (default: false)
 - `limit_count`: [Integer] Limit count. Use `run_limit_count` default value if it's nil (default: nil)  
   Can't be set 0 when `close_if_reach_limit` is true
+- `initially_closed`: [Boolean] Create switch with terminated mode (default: false)
 
 To close the circuit at specific date or when called 1000 times, code goes like:
 

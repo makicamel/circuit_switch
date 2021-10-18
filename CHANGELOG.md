@@ -2,6 +2,7 @@
 
 ### New features
 
+* Add `initially_closed` option to `run` and `open?`.
 * Add `key` argument for easy handling for human more than caller.  
 To migrate, run next.
 
