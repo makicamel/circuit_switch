@@ -9,7 +9,7 @@ module CircuitSwitch
       # Wait for Reporter saves circuit_switch
       sleep(3) if reported
 
-      circuit_switch = CircuitSwitch.find_by(key: key) || CircuitSwitch.find_by(caller: called_path)
+      circuit_switch = key ? CircuitSwitch.find_by(key: key) : CircuitSwitch.find_by(caller: called_path)
       if reported && circuit_switch.nil?
         raise ActiveRecord::RecordNotFound.new('Couldn\'t find CircuitSwitch::CircuitSwitch')
       end
