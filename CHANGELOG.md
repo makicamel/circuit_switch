@@ -7,7 +7,7 @@
 To migrate, run next.
 
 ```
-rails generate circuit_switch:migration add_key
+rails generate circuit_switch:migration circuit_switch add_key
 rails db:migrate
 ```
 
