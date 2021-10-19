@@ -96,6 +96,27 @@ class CoreTest < Test::Unit::TestCase
     )
   end
 
+  def test_run_calls_block_when_initially_closed_is_true_and_switch_exists
+    CircuitSwitch::CircuitSwitch.create(caller: called_path, due_date: due_date)
+    stub(CircuitSwitch::RunCountUpdater).perform_later
+    test_value = 0
+    runner(initially_closed: true).execute_run { test_value = 1 }
+    assert_equal(
+      1,
+      test_value
+    )
+  end
+
+  def test_run_doesnt_calls_block_when_initially_closed_is_true_and_no_switch
+    stub(CircuitSwitch::RunCountUpdater).perform_later
+    test_value = 0
+    runner(initially_closed: true).execute_run { test_value = 1 }
+    assert_equal(
+      0,
+      test_value
+    )
+  end
+
   def test_report_reports_when_all_conditions_are_clear
     stub(CircuitSwitch::Reporter).perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
     reporter.execute_report
