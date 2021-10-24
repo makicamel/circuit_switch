@@ -1,3 +1,9 @@
+## 0.2.2
+
+### Changes
+
+* Declare dependent on ActiveSupport instead of implicitly dependent.
+
 ## 0.2.1
 
 ### New features
