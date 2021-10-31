@@ -1,3 +1,5 @@
+require 'active_support/core_ext/module/aliasing'
+
 module CircuitSwitch
   class Configuration
     CIRCUIT_SWITCH = 'circuit_switch'.freeze
@@ -23,6 +25,10 @@ module CircuitSwitch
 
     def enable_report?
       report_if.respond_to?(:call) ? report_if.call : !!report_if
+    end
+
+    def key_column_name=(key)
+      ::CircuitSwitch::CircuitSwitch.alias_attribute :key, key
     end
 
     def due_date

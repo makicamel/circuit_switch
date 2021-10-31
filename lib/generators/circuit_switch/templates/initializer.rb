@@ -16,6 +16,9 @@ CircuitSwitch.configure do |config|
   # Excluded paths to report
   # config.silent_paths =  [CIRCUIT_SWITCH]
 
+  # Alias column name for circuit_switches.key through alias_attribute
+  # config.key_column_name = :key
+
   # Notifier to notify circuit_switch's due_date come and it's time to clean code!
   # Specify proc to call your report tool: like;
   # config.due_date_notifier = -> (message) { Slack::Web::Client.new.chat_postMessage(channel: '#your_channel', text: message) }

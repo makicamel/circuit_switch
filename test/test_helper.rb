@@ -17,6 +17,7 @@ CircuitSwitch.configure do |config|
   config.reporter = -> (message) { DummyReporter.report(message) }
   config.report_paths = [Dir.pwd]
   config.report_if = true
+  config.key_column_name = :awesome_key
   config.due_date_notifier = -> (message) { DummyReporter.report(message) }
 end
 

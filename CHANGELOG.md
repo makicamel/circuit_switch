@@ -1,5 +1,9 @@
 ## 0.2.2
 
+### New features
+
+* Add `key_column_name` to configuration for aliasing `circuit_switches.key`.
+
 ### Changes
 
 * Declare dependent on ActiveSupport instead of implicitly dependent.
