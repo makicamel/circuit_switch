@@ -1,5 +1,3 @@
-require 'active_support/core_ext/module/aliasing'
-
 module CircuitSwitch
   class Configuration
     CIRCUIT_SWITCH = 'circuit_switch'.freeze
