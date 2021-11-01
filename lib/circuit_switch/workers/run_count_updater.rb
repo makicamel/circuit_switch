@@ -16,7 +16,7 @@ module CircuitSwitch
 
       circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path, run_is_terminated: initially_closed)
       circuit_switch.due_date ||= config.due_date
-      circuit_switch.assign(run_limit_count: limit_count).increment_run_count
+      circuit_switch.assign(run_limit_count: limit_count).increment_run_count!
     end
   end
 end

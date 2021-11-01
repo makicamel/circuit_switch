@@ -28,11 +28,11 @@ module CircuitSwitch
       end
     end
 
-    def increment_run_count
+    def increment_run_count!
       with_writable { update!(run_count: run_count + 1) }
     end
 
-    def increment_report_count
+    def increment_report_count!
       with_writable { update!(report_count: report_count + 1) }
     end
 

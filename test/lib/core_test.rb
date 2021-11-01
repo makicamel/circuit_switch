@@ -40,7 +40,7 @@ class CoreTest < Test::Unit::TestCase
   def test_run_calls_block_when_close_if_reach_limit_is_false_and_reached_limit
     stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
     limit_count = 1
-    CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
+    CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count!
 
     test_value = 0
     runner(close_if_reach_limit: false).execute_run { test_value = 1 }
@@ -52,7 +52,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_run_doesnt_call_block_when_close_if_reach_limit_is_true_and_reached_limit
     limit_count = 1
-    CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count
+    CircuitSwitch::CircuitSwitch.new(run_limit_count: limit_count, caller: called_path, due_date: due_date).increment_run_count!
 
     test_value = 0
     runner(close_if_reach_limit: true).execute_run { test_value = 1 }
@@ -127,7 +127,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_report_reports_when_close_if_reach_limit_is_false_and_reached_limit
     limit_count = 1
-    CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count
+    CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count!
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 1, key: nil, called_path: called_path, run: false)
 
     reporter(limit_count: 1, stop_report_if_reach_limit: false).execute_report
@@ -138,7 +138,7 @@ class CoreTest < Test::Unit::TestCase
 
   def test_report_doesnt_report_when_close_if_reach_limit_is_true_and_reached_limit
     limit_count = 1
-    CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count
+    CircuitSwitch::CircuitSwitch.new(report_limit_count: limit_count, caller: called_path, due_date: due_date).increment_report_count!
     stub(CircuitSwitch::Reporter).perform_later(limit_count: 10, called_path: called_path, run: false)
 
     assert_nothing_raised(RR::Errors::DoubleNotFoundError) do

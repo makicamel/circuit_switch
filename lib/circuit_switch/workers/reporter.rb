@@ -16,7 +16,7 @@ module CircuitSwitch
 
       circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path)
       circuit_switch.due_date ||= config.due_date
-      circuit_switch.assign(report_limit_count: limit_count).increment_report_count
+      circuit_switch.assign(report_limit_count: limit_count).increment_report_count!
       raise CalledNotification.new(circuit_switch.message)
     rescue CalledNotification => notification
       config.reporter.call(notification.to_message(called_path: called_path))
