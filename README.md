@@ -134,6 +134,24 @@ called_path: /app/services/greetings_service:21 block in validate
 /app/controllers/greetings_controller.rb:93 create
 ```
 
+## Test
+
+To test, FactoryBot will look like this;
+
+```ruby
+FactoryBot.define do
+  factory :circuit_switch, class: 'CircuitSwitch::CircuitSwitch' do
+    sequence(:key) { |n| "/path/to/file:#{n}" }
+    sequence(:caller) { |n| "/path/to/file:#{n}" }
+    due_date { Date.tomorrow }
+
+    trait :initially_closed do
+      run_is_terminated { true }
+    end
+  end
+end
+```
+
 ## Task
 
 When find a problem and you want to terminate running or reporting right now, execute a task with it's caller.  
