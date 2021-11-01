@@ -9,17 +9,26 @@ module CircuitSwitch
       # Wait for RunCountUpdater saves circuit_switch
       sleep(3) if run
 
-      circuit_switch = key ? CircuitSwitch.find_by(key: key) : CircuitSwitch.find_by(caller: called_path)
-      if run && circuit_switch.nil?
-        raise ActiveRecord::RecordNotFound.new('Couldn\'t find CircuitSwitch::CircuitSwitch')
-      end
+      first_raise = true
+      begin
+        circuit_switch = key ? CircuitSwitch.find_by(key: key) : CircuitSwitch.find_by(caller: called_path)
+        if run && circuit_switch.nil?
+          raise ActiveRecord::RecordNotFound.new('Couldn\'t find CircuitSwitch::CircuitSwitch')
+        end
 
-      circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path)
-      circuit_switch.due_date ||= config.due_date
-      circuit_switch.assign(report_limit_count: limit_count).increment_report_count!
-      raise CalledNotification.new(circuit_switch.message)
-    rescue CalledNotification => notification
-      config.reporter.call(notification.to_message(called_path: called_path))
+        circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path)
+        circuit_switch.due_date ||= config.due_date
+        circuit_switch.assign(report_limit_count: limit_count).increment_report_count!
+        raise CalledNotification.new(circuit_switch.message)
+      rescue ActiveRecord::RecordInvalid => e
+        raise e unless first_raise
+
+        first_raise = false
+        sleep(2)
+        retry
+      rescue CalledNotification => notification
+        config.reporter.call(notification.to_message(called_path: called_path))
+      end
     end
   end
 end
