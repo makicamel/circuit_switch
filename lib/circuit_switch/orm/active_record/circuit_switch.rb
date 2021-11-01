@@ -2,6 +2,8 @@ require 'active_record'
 
 module CircuitSwitch
   class CircuitSwitch < ::ActiveRecord::Base
+    validates :key, uniqueness: true
+
     after_initialize do |switch|
       switch.key ||= switch.caller
     end

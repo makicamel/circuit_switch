@@ -8,7 +8,7 @@ end
 class CreateCircuitSwitches < ActiveRecord::Migration[5.0]
   def self.up
     create_table :circuit_switches do |t|
-      t.string :awesome_key, null: false, index: true
+      t.string :awesome_key, null: false
       t.string :caller, null: false
       t.integer :run_count, default: 0, null: false
       t.integer :run_limit_count, default: 10, null: false
@@ -19,6 +19,7 @@ class CreateCircuitSwitches < ActiveRecord::Migration[5.0]
       t.date :due_date, null: false
       t.timestamps
     end
+    add_index :circuit_switches, [:awesome_key], unique: true
   end
 end
 

@@ -1,0 +1,11 @@
+class MakeKeyUniqueForCircuitSwitches < ActiveRecord::Migration<%= migration_version %>
+  def up
+    remove_index :circuit_switches, :key
+    add_index :circuit_switches, :key, unique: true
+  end
+
+  def down
+    remove_index :circuit_switches, :key
+    add_index :circuit_switches, :key
+  end
+end

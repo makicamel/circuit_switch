@@ -1,5 +1,17 @@
 ## 0.3.0
 
+### Breaking Changes
+
+* Modify `key` to unique by default.
+To migrate, run next.
+
+```
+rails generate circuit_switch:migration circuit_switch make_key_unique
+rails db:migrate
+```
+
+### Changes
+
 * Fix to save switch when block for `CircuitSwitch.run` raises error.
 
 ## 0.2.2
