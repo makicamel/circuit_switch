@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Fix to save switch when block for `CircuitSwitch.run` raises error.
+
 ## 0.2.2
 
 ### New features

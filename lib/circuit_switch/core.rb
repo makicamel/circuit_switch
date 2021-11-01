@@ -25,6 +25,8 @@ module CircuitSwitch
         yield
         @run = true
       end
+      self
+    ensure
       RunCountUpdater.perform_later(
         key: key,
         limit_count: run_limit_count,
@@ -32,7 +34,6 @@ module CircuitSwitch
         reported: reported?,
         initially_closed: initially_closed
       )
-      self
     end
 
     def execute_report

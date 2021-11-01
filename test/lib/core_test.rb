@@ -117,6 +117,14 @@ class CoreTest < Test::Unit::TestCase
     )
   end
 
+  def test_run_calls_updater_even_when_block_raises_error
+    stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
+    runner.execute_run { raise RuntimeError } rescue RuntimeError
+    assert_received(CircuitSwitch::RunCountUpdater) do |updator|
+      updator.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
+    end
+  end
+
   def test_report_reports_when_all_conditions_are_clear
     stub(CircuitSwitch::Reporter).perform_later(limit_count: nil, key: nil, called_path: called_path, run: false)
     reporter.execute_report
