@@ -119,7 +119,11 @@ class CoreTest < Test::Unit::TestCase
 
   def test_run_calls_updater_even_when_block_raises_error
     stub(CircuitSwitch::RunCountUpdater).perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
-    runner.execute_run { raise RuntimeError } rescue RuntimeError
+    begin
+      runner.execute_run { raise RuntimeError }
+    rescue RuntimeError
+      # noop
+    end
     assert_received(CircuitSwitch::RunCountUpdater) do |updator|
       updator.perform_later(limit_count: nil, key: nil, called_path: called_path, reported: false, initially_closed: false)
     end
