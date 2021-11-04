@@ -116,7 +116,7 @@ Same as `run`, a set of options can be set. By default, this method does not sen
 
 - `key`: [String] The identifier to find record by. If `key` has not been passed, `circuit_switches.caller` is chosen as an alternative.
 - `if`: [Boolean, Proc] Reports when the value of `if` is evaluated truthy (default: true)
-- `stop_report_if`: [Boolean, Proc] Reports when the value of `close_if` is evaluated falsy (default: false)
+- `stop_report_if`: [Boolean, Proc] Reports when the value of `stop_report_if` is evaluated falsy (default: false)
 - `stop_report_if_reach_limit`: [Boolean] Stops reporting when `circuit_switches.report_count` has reached `circuit_switches.report_limit_count` (default: true)
 - `limit_count`: [Integer] Mutates `circuit_switches.report_limit_count` whose value defined in schema is 10 by default. (default: nil)  
   Can't be set to 0 when `stop_report_if_reach_limit` is true.
