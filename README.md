@@ -56,24 +56,30 @@ CircuitSwitch.run do
 end
 ```
 
-`run` calls received proc, and when conditions are met, closes it's circuit.  
-To switch circuit opening and closing, some conditions can be set. By default, the circuit is always opened.  
-You can also set `limit_count` to close circuit when reached the specified count. Default limit_count is 10. To change this default value, modify `circuit_switches.run_limit_count` default value in the migration file.  
-`run` receives optional arguments.
+`run` basically calls the received proc. But when a condition is met, it closes the circuit and does not evaluate the proc.  
+To switch circuit opening and closing, a set of options can be set. Without options, the circuit is always open.  
+You can set `close_if_reach_limit: true` so that the circuit is only open for 10 invocations. The constant 10 comes from the table definition we have arbitrarily chosen. In case you need a larger number, specify it in the `limit_count` option in combination with `close_if_reach_limit: true`, or alter default constraint on `circuit_switches.run_limit_count`.
 
-- `key`: [String] Named key to find switch instead of caller  
-  If no key passed, use caller.
-- `if`: [Boolean, Proc] Call proc when `if` is truthy (default: true)
-- `close_if`: [Boolean, Proc] Call proc when `close_if` is falsy (default: false)
-- `close_if_reach_limit`: [Boolean] Stop calling proc when run count reaches limit (default: false)
-- `limit_count`: [Integer] Limit count. Use `run_limit_count` default value if it's nil (default: nil)  
-  Can't be set 0 when `close_if_reach_limit` is true
-- `initially_closed`: [Boolean] Create switch with terminated mode (default: false)
+- `key`: [String] The identifier to find record by. If `key` has not been passed, `circuit_switches.caller` is chosen as an alternative.
+- `if`: [Boolean, Proc] Calls proc when the value of `if` is evaluated truthy (default: true)
+- `close_if`: [Boolean, Proc] Calls proc when the value of `close_if` is evaluated falsy (default: false)
+- `close_if_reach_limit`: [Boolean] Stops calling proc when `circuit_switches.run_count` has reached `circuit_switches.run_limit_count` (default: false)
+- `limit_count`: [Integer] Mutates `circuit_switches.run_limit_count` whose value defined in schema is 10 by default. (default: nil)  
+  Can't be set to 0 when `close_if_reach_limit` is true. This option is only relevant when `close_if_reach_limit` is set to true.
+- `initially_closed`: [Boolean] Creates switch with terminated mode (default: false)
 
-To close the circuit at specific date or when called 1000 times, code goes like:
+To close the circuit at a specific date, code goes like:
 
 ```ruby
-CircuitSwitch.run(close_if: -> { Date.today >= some_day }, limit_count: 1_000) do
+CircuitSwitch.run(close_if: -> { Date.today >= some_day }) do
+  # testing codes
+end
+```
+
+Or when the code of concern has been called 1000 times:
+
+```ruby
+CircuitSwitch.run(close_if_reach_limit: true, limit_count: 1_000) do
   # testing codes
 end
 ```
@@ -105,17 +111,15 @@ When you just want to report, set your `reporter` to initializer and then call `
 CircuitSwitch.report(if: some_condition)
 ```
 
-`report` just reports the line of code is called. It doesn't receive proc. It's useful for refactoring or removing dead codes.  
-Same as `run`, some conditions can be set. By default, reporting is stopped when reached the specified count. The default count is 10. To change this default value, modify `circuit_switches.report_limit_count` default value in the migration file.  
-`report` receives optional arguments.
+`report` just reports which line of code is called. It doesn't receive proc. It's useful for refactoring or removing dead codes.  
+Same as `run`, a set of options can be set. By default, this method does not send reports more than 10 times. The constant 10 comes from the table definition we have arbitrarily chosen. In case you need a larger number, specify it in the `limit_count` option, or alter default constraint on `circuit_switches.report_limit_count`.
 
-- `key`: [String] Named key to find switch instead of caller  
-  If no key passed, use caller.
-- `if`: [Boolean, Proc] Report when `if` is truthy (default: true)
-- `stop_report_if`: [Boolean, Proc] Report when `close_if` is falsy (default: false)
-- `stop_report_if_reach_limit`: [Boolean] Stop reporting when reported count reaches limit (default: true)
-- `limit_count`: [Integer] Limit count. Use `report_limit_count` default value if it's nil (default: nil)  
-  Can't be set 0 when `stop_report_if_reach_limit` is true
+- `key`: [String] The identifier to find record by. If `key` has not been passed, `circuit_switches.caller` is chosen as an alternative.
+- `if`: [Boolean, Proc] Reports when the value of `if` is evaluated truthy (default: true)
+- `stop_report_if`: [Boolean, Proc] Reports when the value of `close_if` is evaluated falsy (default: false)
+- `stop_report_if_reach_limit`: [Boolean] Stops reporting when `circuit_switches.report_count` has reached `circuit_switches.report_limit_count` (default: true)
+- `limit_count`: [Integer] Mutates `circuit_switches.report_limit_count` whose value defined in schema is 10 by default. (default: nil)  
+  Can't be set to 0 when `stop_report_if_reach_limit` is true.
 
 To know about report is executed or not, you can get through `report?`.  
 Of course you can chain `report` and `run` or `open?`.
