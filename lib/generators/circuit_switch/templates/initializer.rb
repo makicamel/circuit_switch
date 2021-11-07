@@ -2,7 +2,8 @@
 
 CircuitSwitch.configure do |config|
   # Specify proc to call your report tool: like;
-  # config.reporter = -> (message) { Bugsnag.notify(message) }
+  # config.reporter = -> (message, error) { Bugsnag.notify(error) }
+  # config.reporter = -> (message, error) { Sentry::Rails.capture_message(message) }
   config.reporter = nil
 
   # Condition to report

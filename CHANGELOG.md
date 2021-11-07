@@ -1,3 +1,16 @@
+## 0.4.0
+
+### Breaking Changes
+
+* Be able to choice to notify `CircuitSwitch::CalledNotification` or `String`.  
+Improve `config/initializers/circuit_switch.rb` like following.
+
+```diff
+CircuitSwitch.configure do |config|
+-  config.reporter = ->(message) { Bugsnag.notify(message) }
++  config.reporter = ->(message, error) { Bugsnag.notify(error) }
+```
+
 ## 0.3.0
 
 ### Breaking Changes

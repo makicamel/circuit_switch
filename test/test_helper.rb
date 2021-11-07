@@ -14,7 +14,7 @@ require 'test/unit/rr'
 require 'circuit_switch'
 
 CircuitSwitch.configure do |config|
-  config.reporter = -> (message) { DummyReporter.report(message) }
+  config.reporter = -> (message, error) { DummyReporter.report(message) }
   config.report_paths = [Dir.pwd]
   config.report_if = true
   config.key_column_name = :awesome_key

@@ -27,7 +27,11 @@ module CircuitSwitch
         sleep(2)
         retry
       rescue CalledNotification => notification
-        config.reporter.call(notification.to_message(called_path: called_path))
+        if config.reporter.arity == 1
+          config.reporter.call(notification.to_message(called_path: called_path))
+        else
+          config.reporter.call(notification.to_message(called_path: called_path), notification)
+        end
       end
     end
   end
