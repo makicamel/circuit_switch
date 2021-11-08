@@ -121,7 +121,7 @@ Same as `run`, a set of options can be set. By default, this method does not sen
 - `limit_count`: [Integer] Mutates `circuit_switches.report_limit_count` whose value defined in schema is 10 by default. (default: nil)  
   Can't be set to 0 when `stop_report_if_reach_limit` is true.
 
-To know about report is executed or not, you can get through `report?`.  
+To know if `report` has already been executed or not, you can get through `reported?`.  
 Of course you can chain `report` and `run` or `open?`.
 
 #### `with_backtrace`
