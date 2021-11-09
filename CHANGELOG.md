@@ -1,5 +1,6 @@
 ## 0.4.1
 
+* Fix bug `if` `stop_report_if_reach_limit` options don't receive `false`.
 * Fix to report error with stacktrace.
 * Fix not to update run count when run isn't executable.
 

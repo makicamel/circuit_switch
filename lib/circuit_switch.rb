@@ -31,7 +31,7 @@ module CircuitSwitch
         close_if_reach_limit: close_if_reach_limit,
         limit_count: limit_count,
         initially_closed: initially_closed,
-      }.select { |_, v| v }
+      }.reject { |_, v| v.nil? }
       Builder.new.run(**arguments, &block)
     end
 
@@ -52,7 +52,7 @@ module CircuitSwitch
         stop_report_if: stop_report_if,
         stop_report_if_reach_limit: stop_report_if_reach_limit,
         limit_count: limit_count
-      }.select { |_, v| v }
+      }.reject { |_, v| v.nil? }
       Builder.new.report(**arguments)
     end
 
@@ -76,7 +76,7 @@ module CircuitSwitch
         close_if_reach_limit: close_if_reach_limit,
         limit_count: limit_count,
         initially_closed: initially_closed,
-      }.select { |_, v| v }
+      }.reject { |_, v| v.nil? }
       Builder.new.run(**arguments) {}.run?
     end
   end
