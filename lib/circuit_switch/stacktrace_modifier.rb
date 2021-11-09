@@ -6,10 +6,14 @@ module CircuitSwitch
       delegate :config, to: ::CircuitSwitch
 
       def call(backtrace:)
-        backtrace
-          .select { |path| /(#{config.allowed_backtrace_paths.join('|')})/.match?(path) }
-          .map { |path| path.sub(/(#{config.strip_paths.join('|')})/, '') }
-          .join("\n")
+        if config.with_backtrace
+          backtrace
+            .select { |path| /(#{config.allowed_backtrace_paths.join('|')})/.match?(path) }
+            .map { |path| path.sub(/(#{config.strip_paths.join('|')})/, '') }
+        else
+          backtrace
+            .select { |path| /(#{config.allowed_backtrace_paths.join('|')})/.match?(path) }
+        end
       end
     end
   end

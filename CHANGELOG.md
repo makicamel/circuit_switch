@@ -1,5 +1,6 @@
 ## 0.4.1
 
+* Fix to report error with stacktrace.
 * Fix not to update run count when run isn't executable.
 
 ## 0.4.0

@@ -5,7 +5,7 @@ module CircuitSwitch
   class Reporter < ::ActiveJob::Base
     delegate :config, to: ::CircuitSwitch
 
-    def perform(key:, limit_count:, called_path:, run:)
+    def perform(key:, limit_count:, called_path:, stacktrace:, run:)
       # Wait for RunCountUpdater saves circuit_switch
       sleep(3) if run
 
@@ -27,6 +27,7 @@ module CircuitSwitch
         sleep(2)
         retry
       rescue CalledNotification => notification
+        notification.set_backtrace(stacktrace)
         if config.reporter.arity == 1
           config.reporter.call(notification.to_message(called_path: called_path))
         else

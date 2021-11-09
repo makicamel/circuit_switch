@@ -59,6 +59,7 @@ module CircuitSwitch
         key: key,
         limit_count: report_limit_count,
         called_path: called_path,
+        stacktrace: StacktraceModifier.call(backtrace: caller),
         run: run?
       )
       @reported = true
