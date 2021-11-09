@@ -1,3 +1,7 @@
+## 0.4.1
+
+* Fix not to update run count when run isn't executable.
+
 ## 0.4.0
 
 ### Breaking Changes

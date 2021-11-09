@@ -9,6 +9,7 @@ module CircuitSwitch
       :report_if, :stop_report_if, :stop_report_if_reach_limit, :report_limit_count
 
     def execute_run(&block)
+      run_executable = false
       if close_if_reach_limit && run_limit_count == 0
         raise CircuitSwitchError.new('Can\'t set limit_count to 0 when close_if_reach_limit is true')
       end
@@ -21,19 +22,22 @@ module CircuitSwitch
       return self if close_if_reach_limit && switch.reached_run_limit?(run_limit_count)
       return self if switch.run_is_terminated?
 
+      run_executable = true
       unless switch.new_record? && initially_closed
         yield
         @run = true
       end
       self
     ensure
-      RunCountUpdater.perform_later(
-        key: key,
-        limit_count: run_limit_count,
-        called_path: called_path,
-        reported: reported?,
-        initially_closed: initially_closed
-      )
+      if run_executable
+        RunCountUpdater.perform_later(
+          key: key,
+          limit_count: run_limit_count,
+          called_path: called_path,
+          reported: reported?,
+          initially_closed: initially_closed
+        )
+      end
     end
 
     def execute_report
