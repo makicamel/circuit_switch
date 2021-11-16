@@ -180,7 +180,27 @@ By default, due_date is 10 days after today. To modify, set `due_date` to initia
 
 ## GUI to manage switches
 
-Under development :)
+![GUI](circuit_switch.png)
+
+GUI is now only for Rails.  
+Add the following to your `config/routes.rb` and access `/circuit_switch`.
+
+```ruby
+Rails.application.routes.draw do
+  mount CircuitSwitch::Engine => 'circuit_switch'
+end
+```
+
+### Authentication
+
+In production, you may need access protection.  
+With Devise, code goes like:
+
+```ruby
+authenticate :user, lambda { |user| user.admin? } do
+  mount CircuitSwitch::Engine => 'circuit_switch'
+end
+```
 
 ## Contributing
 

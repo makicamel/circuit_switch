@@ -1,0 +1,129 @@
+<h1 class="p-3 fw-light">Edit switch</h1>
+
+<div class="container">
+  <% if @circuit_switch.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @circuit_switch.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with(model: @circuit_switch, local: true) do |form| %>
+    <div class="fw-light">
+      <div class="py-1 row">
+        <div class="col-10 mt-auto">
+          id: <%= @circuit_switch.id %>
+          <span class="px-4 text-muted">
+            created_at: <%=  @circuit_switch.created_at %> /
+            updated_at: <%=  @circuit_switch.updated_at %>
+          </span>
+        </div>
+        <div class="col-2 text-end">
+          <%= link_to 'Back', circuit_switch_index_path, class: 'btn btn-outline-dark' %>
+        </div>
+      </div>
+
+      <div class="py-1">
+        <div class="py-1">
+          <%= form.label :key, 'key:', class: 'form-label' %>
+          <%= form.text_area :key, class: 'form-control font-monospace' %>
+        </div>
+        <div class="py-1">
+          <%= form.label :caller, 'caller:', class: 'form-label' %>
+          <%= form.text_area :caller, class: 'form-control font-monospace' %>
+        </div>
+      </div>
+
+      <div class="py-1">
+        <div class="py-2 row">
+          <%= form.label :run_is_terminated, 'run_mode:', class: 'col-sm-2 col-form-label' %>
+          <div class="col-sm-2">
+            <%= form.select :run_is_terminated, { open: false, closed: true }, { selected: @circuit_switch.run_is_terminated }, { class: ['form-select', (@circuit_switch.run_is_terminated ? 'alert-dark' : 'alert-primary')] } %>
+          </div>
+        </div>
+        <div class="py-2 row">
+          <div class="col-sm-2">
+            <%= form.label :run_count, 'run_count:', class: 'col-form-label' %>
+            <i class="fas fa-info-circle text-black-50 align-baseline px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Increment only when run_mode is open"></i>
+          </div>
+          <div class="col-sm-2">
+            <%= form.text_field :run_count, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="py-2 row">
+          <div class="col-sm-2">
+            <%= form.label :run_limit_count, 'run_limit_count:', class: 'col-form-label' %>
+            <i class="fas fa-info-circle text-black-50 align-baseline px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Reference only when call with `close_if_reach_limit` true"></i>
+          </div>
+          <div class="col-sm-2">
+            <%= form.text_field :run_limit_count, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="py-2 row">
+          <%= form.label :report_is_terminated, 'report_mode:', class: 'col-sm-2 col-sm-2 col-form-label' %>
+          <div class="col-sm-2">
+            <%= form.select :report_is_terminated, { reporting: false, terminated: true }, { selected: @circuit_switch.report_is_terminated }, { class: ['form-select', (@circuit_switch.report_is_terminated ? 'alert-dark' : 'alert-primary')] } %>
+          </div>
+        </div>
+        <div class="py-2 row">
+          <div class="col-sm-2">
+            <%= form.label :report_count, 'report_count:', class: 'col-form-label' %>
+            <i class="fas fa-info-circle text-black-50 align-baseline px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Increment only when report_mode is reporting"></i>
+          </div>
+          <div class="col-sm-2">
+            <%= form.text_field :report_count, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="py-2 row">
+          <div class="col-sm-2">
+            <%= form.label :report_limit_count, 'report_limit_count:', class: 'col-form-label' %>
+            <i class="fas fa-info-circle text-black-50 align-baseline px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Reference only when call with `stop_report_if_reach_limit` true"></i>
+          </div>
+          <div class="col-sm-2">
+            <%= form.text_field :report_limit_count, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="py-1">
+        <div class="py-2 row">
+          <div class="col-sm-2">
+            <%= form.label :due_date, 'due_date:', class: 'col-form-label' %>
+            <i class="fas fa-info-circle text-black-50 align-baseline px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Date to remove switch"></i>
+          </div>
+          <div class="col-sm-2">
+            <%= form.text_field :due_date, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="py-2">
+        <%= form.submit 'update', class: 'btn btn-dark' %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= button_to 'delete', circuit_switch_path(@circuit_switch), method: :delete, class: 'btn btn-danger btn-destroy' %>
+</div>
+
+<script>
+$('select').on('change', function() {
+  style = $(this).val() == 'true' ? 'alert-dark' : 'alert-primary'
+  $(this).removeClass('alert-primary alert-dark')
+  $(this).addClass(style)
+})
+
+$('.btn-destroy').on('click', function (event) {
+  if (!window.confirm('Are you sure to destroy?')) {
+    event.preventDefault()
+  }
+})
+
+tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>

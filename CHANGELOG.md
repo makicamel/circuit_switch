@@ -1,3 +1,16 @@
+## 0.5.0
+
+### New features
+
+* GUI has been released!  
+If you are on Rails, add the following to your `config/routes.rb` and access `/circuit_switch`.
+
+```ruby
+Rails.application.routes.draw do
+  mount CircuitSwitch::Engine => 'circuit_switch'
+end
+```
+
 ## 0.4.1
 
 * Fix bug `if` `stop_report_if_reach_limit` options don't receive `false`.

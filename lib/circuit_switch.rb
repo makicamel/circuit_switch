@@ -1,6 +1,7 @@
 require_relative 'circuit_switch/configuration'
 require_relative 'circuit_switch/builder'
 require_relative 'circuit_switch/orm/active_record/circuit_switch'
+require_relative 'circuit_switch/engine' if defined?(Rails)
 require_relative 'circuit_switch/railtie' if defined?(Rails::Railtie)
 require_relative 'circuit_switch/version'
 require_relative 'circuit_switch/workers/due_date_notifier'

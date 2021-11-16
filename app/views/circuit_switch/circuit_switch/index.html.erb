@@ -1,0 +1,83 @@
+<h1 class="p-3 fw-light">
+  circuit_switch <i class="fas fa-xs fa-toggle-on text-warning"></i>
+</h1>
+
+<div class="container">
+  <% if flash[:success].present? %>
+    <div class="alert alert-info"><%= flash[:success] %></div>
+  <% end %>
+
+  <div class="dropdown py-2 text-end">
+    <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+      <%= params[:order_by] == 'due_date' ? 'due date ordered' : 'id ordered' %>
+    </a>
+
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <li><%= link_to 'id ordered', circuit_switch_index_path(order_by: :id), class: 'dropdown-item' %></li>
+      <li><%= link_to 'due date ordered', circuit_switch_index_path(order_by: :due_date), class: 'dropdown-item' %></li>
+    </ul>
+  </div>
+
+  <table class="table table-striped table-hover striped-primary table-bordered border fw-light">
+    <thead class="table-dark border border-dark">
+      <tr>
+        <th scope="col" class="px-3 py-4 fw-light text-center">id</th>
+        <th scope="col" class="px-3 py-4 fw-light">key</th>
+        <th scope="col" class="px-3 py-4 fw-light">caller</th>
+        <th scope="col" class="px-1 py-4 fw-light">due_date</th>
+        <th scope="col" class="px-3 py-4 fw-light text-center">run</th>
+        <th scope="col" class="px-3 py-4 fw-light text-center">report</th>
+        <th scope="col" class="px-3 py-4 fw-light text-center">show/edit</th>
+        <th scope="col" class="px-3 py-4 fw-light text-center">destroy</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @circuit_switches.each do |circuit_switch| %>
+        <tr>
+          <td class="text-center align-middle"><%= circuit_switch.id %></td>
+          <td class="text-break small font-monospace"><%= circuit_switch.key %></td>
+          <td class="text-break small font-monospace"><%= circuit_switch.caller %></td>
+          <td class="text-nowrap"><%= circuit_switch.due_date %></td>
+          <td class="text-center align-middle">
+            <% if circuit_switch.run_is_terminated %>
+              <i class="fas fa-lg fa-ban text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="closed mode"></i>
+            <% else %>
+              <i class="fas fa-lg fa-walking " data-bs-toggle="tooltip" data-bs-placement="top" title="opened mode"></i>
+            <% end %>
+          </td>
+          <td class="text-center align-middle">
+            <% if circuit_switch.report_is_terminated %>
+              <i class="fas fa-lg fa-ban text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="terminated mode"></i>
+            <% else %>
+              <i class="fas fa-lg fa-bullhorn " data-bs-toggle="tooltip" data-bs-placement="top" title="reporting mode"></i>
+            <% end %>
+          </td>
+          <td class="text-center align-middle py-3">
+            <%= button_to edit_circuit_switch_path(circuit_switch), method: :get, class: 'btn btn-outline-dark' do %>
+              <i class="fas fa-edit"></i>
+            <% end %>
+          </td>
+          <td class="text-center align-middle py-3">
+            <%= button_to circuit_switch_path(circuit_switch), method: :delete, class: 'btn btn-danger btn-destroy' do %>
+              <i class="fas fa-broom"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+$('.btn-destroy').on('click', function (event) {
+  if (!window.confirm('Are you sure to destroy?')) {
+    event.preventDefault()
+  }
+})
+
+tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
