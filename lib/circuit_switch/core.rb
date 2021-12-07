@@ -14,7 +14,6 @@ module CircuitSwitch
         raise CircuitSwitchError.new('Can\'t set limit_count to 0 when close_if_reach_limit is true')
       end
       if close_if_reach_limit.nil?
-        Logger.new($stdout).info('Default value for close_if_reach_limit is modified from true to false at ver 0.2.0.')
         @close_if_reach_limit = false
       end
 
