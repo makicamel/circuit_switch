@@ -12,7 +12,7 @@ module CircuitSwitch
       key: nil,
       if: true,
       close_if: false,
-      close_if_reach_limit: nil,
+      close_if_reach_limit: false,
       limit_count: nil,
       initially_closed: false
     )
