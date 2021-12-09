@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Remove warning related `CircuitSwitch.open?` without `close_if_reach_limit` option.
+
 ## 0.5.0
 
 ### New features
