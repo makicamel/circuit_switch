@@ -1,7 +1,8 @@
 require 'active_record'
 
 module CircuitSwitch
-  class CircuitSwitch < ::ActiveRecord::Base
+  klass = defined?(ApplicationRecord) ? ApplicationRecord : ActiveRecord::Base
+  class CircuitSwitch < klass
     validates :key, uniqueness: true
 
     after_initialize do |switch|
@@ -46,8 +47,9 @@ module CircuitSwitch
     private
 
     def with_writable
-      if self.class.const_defined?(:ApplicationRecord) && ApplicationRecord.respond_to?(:with_writable)
-        ApplicationRecord.with_writable { yield }
+      klass = defined?(ApplicationRecord) ? ApplicationRecord : ActiveRecord::Base
+      if self.class.const_defined?(:ApplicationRecord) && klass.respond_to?(:with_writable)
+        klass.with_writable { yield }
       else
         yield
       end
