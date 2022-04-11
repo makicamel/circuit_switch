@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["unright@gmail.com"]
 
   spec.summary       = 'Circuit switch with report tools'
-  spec.description   = 'circuit_switch is a gem for \'difficult\' application. This switch helps to make changes easier and deploy safely.'
+  spec.description   = "circuit_switch is a gem for 'difficult' application. This switch helps to make changes easier and deploy safely."
   spec.homepage      = 'https://github.com/makicamel/circuit_switch'
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
