@@ -5,6 +5,7 @@ require_relative 'circuit_switch/engine' if defined?(Rails)
 require_relative 'circuit_switch/railtie' if defined?(Rails::Railtie)
 require_relative 'circuit_switch/version'
 require_relative 'circuit_switch/workers/due_date_notifier'
+require_relative 'circuit_switch/store'
 
 module CircuitSwitch
   class << self
