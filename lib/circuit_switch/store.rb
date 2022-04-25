@@ -3,8 +3,9 @@ require 'redis'
 module CircuitSwitch
   class Store
     BASE_KEY = 'circuit_switch'.freeze
-    attr_accessor :key, :caller, :run_count, :run_limit_count, :run_is_terminated, :report_count, :report_limit_count, :report_is_terminated, :due_date
-    def initialize(key: nil, caller: nil, run_count: 0, run_limit_count: 10, run_is_terminated: false, report_count: 0, report_limit_count: 10, report_is_terminated: false, due_date: nil)
+
+    attr_accessor :key, :caller, :run_count, :run_limit_count, :run_is_terminated, :report_count, :report_limit_count, :report_is_terminated, :due_date, :created_at, :updated_at
+    def initialize(key: nil, caller: nil, run_count: 0, run_limit_count: 10, run_is_terminated: false, report_count: 0, report_limit_count: 10, report_is_terminated: false, due_date: nil, created_at: Time.current, updated_at: Time.current)
       @key = key || caller
       @caller = caller
       @run_count = run_count
@@ -14,6 +15,8 @@ module CircuitSwitch
       @report_limit_count = report_limit_count
       @report_is_terminated = report_is_terminated
       @due_date = due_date
+      @created_at = created_at
+      @updated_at = updated_at
     end
 
     def to_h
@@ -26,11 +29,25 @@ module CircuitSwitch
         report_count: report_count,
         report_limit_count: report_limit_count,
         report_is_terminated: report_is_terminated,
-        due_date: due_date
+        due_date: due_date,
+        created_at: created_at,
+        updated_at: updated_at
       }
     end
 
+    def model_name
+      'circuit_switch'
+    end
+
+    def to_model
+      self
+    end
+
     class << self
+      def find(key)
+        find_by(key: key)
+      end
+
       def find_by(key: nil, caller: nil)
         key ||= caller
         raise ArgumentError, 'key or caller is required' unless key
@@ -52,6 +69,12 @@ module CircuitSwitch
         redis.keys("#{BASE_KEY}.*").empty?
       end
 
+      def all
+        redis.keys("#{BASE_KEY}.*").map do |key|
+          new(**convert_hash_from_redis(redis.hgetall(key)))
+        end
+      end
+
       def redis
         @redis ||= Redis.new
       end
@@ -62,8 +85,10 @@ module CircuitSwitch
         hash.to_h do |k, v|
           key = k.to_sym
           value = case key
-          when /_count$/, /_terminated$/
+          when /_count$/
             v.to_i
+          when /_terminated/
+            v == "true" ? true : false
           when :due_date
             Time.parse(v)
           else
@@ -111,11 +136,31 @@ module CircuitSwitch
       "#{process} is called for #{report_count}th. Report until for #{report_limit_count}th."
     end
 
+    # For ActiveModel compatibility in Engine
+    def to_param
+      key
+    end
+
+    def update(attributes)
+      attributes.each do |key, value|
+        send("#{key}=", value)
+      end
+      save!
+      true
+    end
+
+    def destroy!
+      self.class.redis.del("#{BASE_KEY}.#{key}")
+      true
+    end
+
     private
 
     def save!
       raise 'key is empty!' unless @key
 
+      self.updated_at = Time.current
+      pp to_h
       self.class.redis.hset("#{BASE_KEY}.#{key}", to_h)
     end
   end
