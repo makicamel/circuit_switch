@@ -4,38 +4,32 @@ class ReporterTest < Test::Unit::TestCase
   include ::CircuitSwitch::TestHelper
 
   setup do
-    CircuitSwitch::CircuitSwitch.truncate
+    CircuitSwitch::Store.redis.flushall
   end
 
   def test_reporter_calls_config_reporter
     message = CircuitSwitch::Reporter.new.perform(key: nil, limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
-      CircuitSwitch::CircuitSwitch.last.message,
-      message
+      message,
+      CircuitSwitch::Store.find_by(key: called_path).message
     )
   end
 
   def test_reporter_creates_circuit_switch_when_no_switch
-    assert_equal(
-      0,
-      CircuitSwitch::CircuitSwitch.all.size
-    )
+    assert CircuitSwitch::Store.empty?
     CircuitSwitch::Reporter.new.perform(key: nil, limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
-      true,
-      CircuitSwitch::CircuitSwitch.exists?(report_count: 1, key: called_path)
+      1,
+      CircuitSwitch::Store.find_by(key: called_path).report_count
     )
   end
 
   def test_reporter_creates_circuit_switch_with_key_when_no_switch
-    assert_equal(
-      0,
-      CircuitSwitch::CircuitSwitch.all.size
-    )
+    assert CircuitSwitch::Store.empty?
     CircuitSwitch::Reporter.new.perform(key: 'test', limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
-      true,
-      CircuitSwitch::CircuitSwitch.exists?(report_count: 1, key: 'test')
+      1,
+      CircuitSwitch::Store.find_by(key: 'test').report_count
     )
   end
 
@@ -43,12 +37,12 @@ class ReporterTest < Test::Unit::TestCase
     CircuitSwitch::Reporter.new.perform(key: nil, limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
       1,
-      CircuitSwitch::CircuitSwitch.find_by(key: called_path, caller: called_path).report_count
+      CircuitSwitch::Store.find_by(key: called_path, caller: called_path).report_count
     )
     CircuitSwitch::Reporter.new.perform(key: nil, limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
       2,
-      CircuitSwitch::CircuitSwitch.find_by(key: called_path, caller: called_path).report_count
+      CircuitSwitch::Store.find_by(key: called_path, caller: called_path).report_count
     )
   end
 
@@ -56,12 +50,12 @@ class ReporterTest < Test::Unit::TestCase
     CircuitSwitch::Reporter.new.perform(key: 'test', limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
       1,
-      CircuitSwitch::CircuitSwitch.find_by(key: 'test').report_count
+      CircuitSwitch::Store.find_by(key: 'test').report_count
     )
     CircuitSwitch::Reporter.new.perform(key: 'test', limit_count: 10, called_path: called_path, stacktrace: [], run: false)
     assert_equal(
       2,
-      CircuitSwitch::CircuitSwitch.find_by(key: 'test', caller: called_path).report_count
+      CircuitSwitch::Store.find_by(key: 'test', caller: called_path).report_count
     )
   end
 
