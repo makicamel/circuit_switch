@@ -41,7 +41,7 @@ module CircuitSwitch
         raise CircuitSwitchError.new('Set config.reporter.')
       end
       if config.reporter.arity == 1
-        Logger.new($stdout).info('config.reporter now receives 2 arguments. Improve your `config/initialzers/circuit_switch.rb`.')
+        Logger.new($stdout).info('config.reporter now receives 2 arguments. Improve your `config/initializers/circuit_switch.rb`.')
       end
       if stop_report_if_reach_limit && report_limit_count == 0
         raise CircuitSwitchError.new('Can\'t set limit_count to 0 when stop_report_if_reach_limit is true')
