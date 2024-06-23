@@ -11,12 +11,12 @@ module CircuitSwitch
 
       first_raise = true
       begin
-        circuit_switch = key ? CircuitSwitch.find_by(key: key) : CircuitSwitch.find_by(caller: called_path)
+        circuit_switch = key ? Store.find_by(key: key) : Store.find_by(caller: called_path)
         if run && circuit_switch.nil?
           raise ActiveRecord::RecordNotFound.new('Couldn\'t find CircuitSwitch::CircuitSwitch')
         end
 
-        circuit_switch ||= CircuitSwitch.new(key: key, caller: called_path)
+        circuit_switch ||= Store.new(key: key, caller: called_path)
         circuit_switch.due_date ||= config.due_date
         circuit_switch.assign(report_limit_count: limit_count).increment_report_count!
         raise CalledNotification.new(circuit_switch.message)

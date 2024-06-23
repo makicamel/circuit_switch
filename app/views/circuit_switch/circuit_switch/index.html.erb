@@ -21,7 +21,6 @@
   <table class="table table-striped table-hover striped-primary table-bordered border fw-light">
     <thead class="table-dark border border-dark">
       <tr>
-        <th scope="col" class="px-3 py-4 fw-light text-center">id</th>
         <th scope="col" class="px-3 py-4 fw-light">key</th>
         <th scope="col" class="px-3 py-4 fw-light">caller</th>
         <th scope="col" class="px-1 py-4 fw-light">due_date</th>
@@ -35,7 +34,6 @@
     <tbody>
       <% @circuit_switches.each do |circuit_switch| %>
         <tr>
-          <td class="text-center align-middle"><%= circuit_switch.id %></td>
           <td class="text-break small font-monospace"><%= circuit_switch.key %></td>
           <td class="text-break small font-monospace"><%= circuit_switch.caller %></td>
           <td class="text-nowrap"><%= circuit_switch.due_date %></td>
