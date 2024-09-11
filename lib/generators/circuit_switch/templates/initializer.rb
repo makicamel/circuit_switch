@@ -15,7 +15,7 @@ CircuitSwitch.configure do |config|
   # config.report_paths = [Rails.root]
 
   # Excluded paths to report
-  # config.silent_paths =  [CIRCUIT_SWITCH]
+  # config.silent_paths = [CIRCUIT_SWITCH]
 
   # Alias column name for circuit_switches.key through alias_attribute
   # config.key_column_name = :key
