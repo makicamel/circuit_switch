@@ -1,6 +1,6 @@
 name: CI
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -8,12 +8,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        ruby: [2.3, 2.4, 2.5, 2.6, 2.7, 3.0, head, truffleruby]
-        exclude:
-          - os: windows-latest
-            ruby: head
-          - os: windows-latest
-            ruby: truffleruby
+        ruby: [2.6, 2.7, 3.0, head]
+        include:
+          - { os: macos-13, ruby: '2.3' }
+          - { os: macos-13, ruby: '2.4' }
+          - { os: macos-13, ruby: '2.5' }
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
